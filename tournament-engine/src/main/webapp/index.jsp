@@ -6,10 +6,6 @@
         <title>Canvas demo area</title>
     </head>
     <body>
-        <input type="button" id="clicker" value="Click me!" title="Click me!" />
-        
-        <br />
-        
 <!--      <canvas id="knockoutCanvas" resize></canvas>-->
         <canvas id="knockoutCanvas" height="500" width="900"></canvas>
         
@@ -29,7 +25,7 @@
         <button id="fixture-button">Submit fixture</button>
         
         <footer>
-            <p>&copy; Answer Consulting Ltd. 2013</p>
+            <p>&copy; Answer Consulting Ltd. <script>document.write(new Date().getFullYear())</script></p>
         </footer>
         
         <script type="text/javascript" src="js/vendor/jquery.js"></script>

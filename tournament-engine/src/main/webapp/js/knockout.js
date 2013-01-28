@@ -8,6 +8,11 @@
                     }
                 });
             }
+        },
+
+        shuffle : function(arr) {
+            for(var j, x, i = arr.length; i; j = parseInt(Math.random() * i), x = arr[--i], arr[i] = arr[j], arr[j] = x);
+            return arr;
         }
     };
     
@@ -46,15 +51,55 @@
             
             addFixture  : function(fixture){
                 var position = fixture.position;
+                
                 this.fixtures[position][0] = fixture.date;
                 this.fixtures[position][1] = fixture.time;
             },
             
             addResult   : function(result){
                 var position = result.position;
+                
                 this.names[position] = result.winner;
                 this.scores[position][0] = result.scores[0];
                 this.scores[position][1] = result.scores[1];
+            },
+            
+            createRandomTournament : function(teams){
+                var maxDepth = Math.ceil((Math.log(teams.length))/(Math.log(2)));
+                
+                var minPosition = Math.pow(2, maxDepth);
+                var maxPosition = Math.pow(2, maxDepth + 1) -1;
+                
+                // Set later rounds to blank
+                for(var position = 0; position < minPosition; position++){
+                    this.names[position] = '';
+                }
+                
+                var firstRound = new Array();
+                
+                // Add teams to an array big enough for the first round
+                for(var i = 0; i < Math.pow(2, maxDepth); i++) {
+                    if(teams[i]) {
+                        firstRound[i] = teams[i];
+                    } else {
+                        firstRound[i] = '';
+                    }
+                }
+                
+                // Shuffle the first round
+                firstRound = Utils.shuffle(firstRound);
+                
+                // Append the first round to the end of the earlier rounds
+                for(var k = minPosition; k <= maxPosition; k++) {
+                    this.names.push(firstRound[k - minPosition]);
+                }
+                
+                // Fill in the other parts
+                for(var j = 0; j <= minPosition; j++){
+                    this.locations[j] = '';
+                    this.scores[j] = ['', ''];
+                    this.fixtures[j] = ['', ''];
+                }
             }
         };
         
@@ -163,7 +208,7 @@
             var x = boxes[i].position.x - options.widthDistance * options.width * (1 - options.lineLength) - options.width / 2 + options.fontAllowance;
             var y = boxes[i].position.y;
 
-            if((tournament.scores[i][0] != 'undefined' && tournament.scores[i][1] != 'undefined') &&
+            if((tournament.scores[i] != 'undefined') &&
                (tournament.scores[i][0] != '' && tournament.scores[i][1] != '')) {
                 var homeScore = new paper.PointText(new paper.Point(x, y - options.fontAllowance));
                 homeScore.content = tournament.scores[i][0];
@@ -183,12 +228,16 @@
 
         var addSuccessColors = function(){
             for(var i = 1; i < Math.pow(2, depth); i++) {
-                if(tournament.names[i] == tournament.names[i * 2]) {
-                    boxes[i * 2].strokeColor = 'green';
-                }
+                var winningTeam = tournament.names[i];
+                
+                if(winningTeam != '') {
+                    if(winningTeam == tournament.names[i * 2]) {
+                        boxes[i * 2].strokeColor = 'green';
+                    }
 
-                if(tournament.names[i] == tournament.names[i * 2 + 1]) {
-                    boxes[i * 2 + 1].strokeColor = 'green';
+                    if(winningTeam == tournament.names[i * 2 + 1]) {
+                        boxes[i * 2 + 1].strokeColor = 'green';
+                    }
                 }
             }
         };
@@ -253,6 +302,11 @@
             
             addResult : function(result){
                 tournament.addResult(result);
+                init();
+            },
+            
+            createRandomTournament : function(teams){
+                tournament.createRandomTournament(teams);
                 init();
             }
         };
