@@ -82,7 +82,7 @@
                     if(teams[i]) {
                         firstRound[i] = teams[i];
                     } else {
-                        firstRound[i] = '';
+                        firstRound[i] = '-';
                     }
                 }
                 
@@ -92,6 +92,16 @@
                 // Append the first round to the end of the earlier rounds
                 for(var k = minPosition; k <= maxPosition; k++) {
                     this.names.push(firstRound[k - minPosition]);
+                }
+                
+                for(var l = minPosition - 1; l > 0; l--){
+                    if(this.names[l * 2] == '-'){
+                        this.names[l] = this.names[l * 2 + 1];
+                    } else {
+                        if(this.names[l * 2 + 1] == '-'){
+                            this.names[l] = this.names[l * 2];
+                        }
+                    }
                 }
                 
                 // Fill in the other parts
@@ -230,7 +240,7 @@
             for(var i = 1; i < Math.pow(2, depth); i++) {
                 var winningTeam = tournament.names[i];
                 
-                if(winningTeam != '') {
+                if(winningTeam != '' && winningTeam != '-') {
                     if(winningTeam == tournament.names[i * 2]) {
                         boxes[i * 2].strokeColor = 'green';
                     }
