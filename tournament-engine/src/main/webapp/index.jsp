@@ -2,7 +2,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link rel="icon" type="image/x-icon" href="favicon.ico" />
         <title>Canvas demo area</title>
     </head>
     <body>
@@ -16,7 +17,7 @@
             
             <br /><br />
             
-            <select id="current-teams" multiple="true" size="7"></select>
+            <select id="current-teams" multiple="multiple" size="7"></select>
             <button id="remove-team-button">Remove selected teams</button>
             
             <br /><br />
