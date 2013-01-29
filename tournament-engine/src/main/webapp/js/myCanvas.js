@@ -2,11 +2,11 @@ $(document).ready(function(){
 //    var teams = ['Blackburn', 'Coventry', 'Liverpool'];
 //    var teams = ['Morecambe', 'Blackburn', 'Coventry', 'Liverpool'];
 //    var teams = ['Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'];
-    var teams = ['Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'];
+//    var teams = ['Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'];
     
     var knockout = new Knockout("knockoutCanvas");
     
-    knockout.createRandomTournament(teams);
+//    knockout.createRandomTournament(teams);
     
 //    var knockoutTournament = {
 //        names     : ['', '', 'West Ham', 'Coventry', 'Man Utd', 'West Ham', 'Blackburn', 'Coventry', 'Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'],
@@ -16,6 +16,8 @@ $(document).ready(function(){
 //    };
 //
 //    var knockout = new Knockout("knockoutCanvas", knockoutTournament);
+    
+    new CreateTournament(knockout);
     
     new SubmitScoreView(knockout);
     

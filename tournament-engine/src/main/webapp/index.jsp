@@ -6,23 +6,39 @@
         <title>Canvas demo area</title>
     </head>
     <body>
-<!--      <canvas id="knockoutCanvas" resize></canvas>-->
-        <canvas id="knockoutCanvas" height="500" width="900"></canvas>
+        <div id="create-div">
+            Enter your teams!
+            
+            <br /><br />
+            
+            <input id="new-team" placeholder="New team" />
+            <button id="add-team-button">Add team</button>
+            
+            <br /><br />
+            
+            <select id="current-teams" multiple="true" size="7"></select>
+            <button id="create-cournament-button">Create knockout tournament</button>
+        </div>
         
-        <br />
-        
-        <input id="score-position" placeholder="Position" />
-        <input id="winner" placeholder="Winner" />
-        <input id="home-score" placeholder="Home score" />
-        <input id="away-score" placeholder="Away score" />
-        <button id="score-button">Submit score</button>
-        
-        <br />
-        
-        <input id="fixture-position" placeholder="Position" />
-        <input id="date" placeholder="date" />
-        <input id="time" placeholder="time" />
-        <button id="fixture-button">Submit fixture</button>
+        <div id="tournament-div" hidden="hidden">
+<!--          <canvas id="knockoutCanvas" resize></canvas>-->
+            <canvas id="knockoutCanvas" height="500" width="900"></canvas>
+
+            <br />
+
+            <input id="score-position" placeholder="Position" />
+            <input id="winner" placeholder="Winner" />
+            <input id="home-score" placeholder="Home score" />
+            <input id="away-score" placeholder="Away score" />
+            <button id="score-button">Submit score</button>
+
+            <br />
+
+            <input id="fixture-position" placeholder="Position" />
+            <input id="date" placeholder="Date" />
+            <input id="time" placeholder="Time" />
+            <button id="fixture-button">Submit fixture</button>
+        </div>
         
         <footer>
             <p>&copy; Answer Consulting Ltd. <script>document.write(new Date().getFullYear())</script></p>
