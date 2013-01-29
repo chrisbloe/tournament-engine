@@ -46,6 +46,7 @@
         
         $addTeamButton.on("click", function(){
             $currentTeams.append("<option value='"+$newTeam.val()+"'>"+$newTeam.val()+"</option>");
+            sortOptions($currentTeams[0]);
             $newTeam.val("");
             $newTeam.focus();
         });
@@ -70,4 +71,47 @@
             $tournamentDiv.show();
         });
     };
+    
+   /**
+    * Sorts all of the options in a select element
+    *
+    * @author Dan Delaney http://fluidmind.org/
+    * @param  element     The HTML select element to be sorted
+    * @param  direction   The sort direction: 'asc' or 'desc' (optional)
+    */
+   var sortOptions = function(element, direction){
+       // We have to put the whole options array into a new array, because
+       // the options array doesn't support all of the Array methods (like sort)
+       // Doesn't that suck?
+       var options = new Array();
+       for(var i = 0; i < element.options.length; i++){
+           options.push(element.options[i]);
+       }
+
+       // Sort it with a function that uses the 'text' property of the Option object
+       options.sort(function(a, b){
+            if(a.text.toLowerCase() < b.text.toLowerCase()){
+                return -1;
+            }
+            
+            if(a.text.toLowerCase() > b.text.toLowerCase()){
+                return 1;
+            }
+            
+            return 0;
+        });
+
+       // If asked to sort in descending, reverse it
+       if(direction != undefined && direction.toLowerCase() == 'desc'){
+           options.reverse();
+       }
+
+       // Now copy the array back into the options array
+       for(var i = 0; i < options.length; i++){
+           element.options[i] = new Option(options[i].text, 
+                                           options[i].value, 
+                                           options[i].defaultSelected, 
+                                           options[i].selected);
+       }
+   }
 })(jQuery);
