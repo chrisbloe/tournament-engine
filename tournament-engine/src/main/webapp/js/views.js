@@ -59,10 +59,9 @@
         
         $createTournamentButton.on("click", function(){
             var teams = [];
-            $('#current-teams option').attr('selected', 'selected');
 
-            $('#current-teams :selected').each(function(i, selected){
-                teams[i] = $(selected).text();
+            $('#current-teams option').each(function(i, option){
+                teams[i] = $(option).text();
             });
             
             knockout.createRandomTournament(teams);
