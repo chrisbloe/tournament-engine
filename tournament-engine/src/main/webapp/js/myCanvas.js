@@ -22,4 +22,6 @@ $(document).ready(function(){
     new SubmitScoreView(knockout);
     
     new SubmitFixture(knockout);
+    
+    $("#new-team").focus();
 });

@@ -17,6 +17,10 @@
             <br /><br />
             
             <select id="current-teams" multiple="true" size="7"></select>
+            <button id="remove-team-button">Remove selected teams</button>
+            
+            <br /><br />
+            
             <button id="create-cournament-button">Create knockout tournament</button>
         </div>
         

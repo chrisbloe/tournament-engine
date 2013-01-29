@@ -40,13 +40,23 @@
         var $newTeam = $("#new-team");
         var $addTeamButton = $("#add-team-button");
         var $currentTeams = $('#current-teams');
-        var $createCournamentButton = $("#create-cournament-button");
+        
+        var $removeTeamButton = $("#remove-team-button");
+        var $createTournamentButton = $("#create-cournament-button");
         
         $addTeamButton.on("click", function(){
             $currentTeams.append("<option value='"+$newTeam.val()+"'>"+$newTeam.val()+"</option>");
+            $newTeam.val("");
+            $newTeam.focus();
         });
         
-        $createCournamentButton.on("click", function(){
+        $removeTeamButton.on("click", function(){
+            $('#current-teams :selected').remove();
+            
+            $newTeam.focus();
+        });
+        
+        $createTournamentButton.on("click", function(){
             var teams = [];
             $('#current-teams option').attr('selected', 'selected');
 
