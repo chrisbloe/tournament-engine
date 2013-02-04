@@ -1,6 +1,6 @@
 ;(function($){
     SubmitScoreView = function(knockout){
-        var $position = $("#score-position");
+        var $position = $("#position");
         var $winner = $("#winner");
         var $homeScore = $("#home-score");
         var $awayScore = $("#away-score");
@@ -18,15 +18,21 @@
     };
     
     SubmitFixture = function(knockout){
-        var $position = $("#fixture-position");
-        var $date = $("#date");
-        var $time = $("#time");
+        var $position = $("#position");
+        var $fixtureDate = $("#fixture-date");
+        var $fixtureTime = $("#fixture-time");
         var $fixtureButton = $("#fixture-button");
+        
+        $fixtureDate.datepicker({
+            autoSize    : true,
+            dateFormat  : "dd-mm-yy",
+            firstDay    : 1
+        });
         
         $fixtureButton.on("click", function(){
             var position = $position.val();
-            var date = $date.val();
-            var time = $time.val();
+            var date = $fixtureDate.val();
+            var time = $fixtureTime.val();
            
             var fixture = {date:date, time:time, position: position};
             knockout.addFixture(fixture);

@@ -4,6 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
+        <link rel="stylesheet" href="css/jquery-ui.css">
         <link rel="stylesheet" href="css/canvas.css">
         <title>Canvas demo area</title>
     </head>
@@ -32,19 +33,23 @@
             </div>
 
             <br />
-
-            <input id="score-position" placeholder="Position" />
-            <input id="winner" placeholder="Winner" />
-            <input id="home-score" placeholder="Home score" />
-            <input id="away-score" placeholder="Away score" />
-            <button id="score-button">Submit score</button>
-
-            <br />
-
-            <input id="fixture-position" placeholder="Position" />
-            <input id="date" placeholder="Date" />
-            <input id="time" placeholder="Time" />
-            <button id="fixture-button">Submit fixture</button>
+            
+            <input id="position" hidden="hidden" />
+            
+            <div id="match-fixture-container" hidden="hidden">
+                <input id="fixture-date" placeholder="Date" maxlength="10" />
+                <input id="fixture-time" placeholder="Time (19:30)" maxlength="5" />
+                <button id="fixture-button">Submit fixture</button>
+            </div>
+            
+            <div id="match-result-container" hidden="hidden">
+                <br />
+                
+                <select id="winner"/>
+                <input id="home-score" placeholder="Home score" />
+                <input id="away-score" placeholder="Away score" />
+                <button id="score-button">Submit score</button>
+            </div>
         </div>
         
         <footer>
@@ -52,6 +57,7 @@
         </footer>
         
         <script type="text/javascript" src="js/vendor/jquery.js"></script>
+        <script type="text/javascript" src="js/vendor/jquery-ui.js"></script>
         <script type="text/javascript" src="js/vendor/paper.js"></script>
         <script type="text/javascript" src="js/knockout.js"></script>
         <script type="text/javascript" src="js/views.js"></script>

@@ -94,6 +94,7 @@
                     this.names.push(firstRound[k - minPosition]);
                 }
                 
+                // THIS NEEDS MOVING OUT INTO ITS OWN FUNCTION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 for(var l = minPosition - 1; l > 0; l--){
                     if(this.names[l * 2] == '-'){
                         this.names[l] = this.names[l * 2 + 1];
@@ -119,7 +120,8 @@
     };
     
     Knockout = function(id, knockoutTournament, knockoutOptions){
-        var canvas        = $('#'+id)[0];
+        var $canvas       = $('#'+id);
+        var canvas        = $canvas[0];
         
         var tournament    = new KnockoutTournament(knockoutTournament);
         var options       = new Options(knockoutOptions);
@@ -267,6 +269,72 @@
                            new paper.Point(1, 1))
                      .strokeColor = 'black';
         };
+        
+        var showMatchEditor = function(event){
+            var $matchFixtureContainer = $("#match-fixture-container");
+            var $matchResultContainer = $("#match-result-container");
+            var $canvas = $("#knockout-canvas");
+            var $position = $("#position");
+            
+            var $fixtureDate = $("#fixture-date");
+            var $fixtureTime = $("#fixture-time");
+            var $winner = $("#winner");
+            var $homeScore = $("#home-score");
+            var $awayScore = $("#away-score");
+            
+            $matchFixtureContainer.hide();
+            $matchResultContainer.hide();
+            
+            var x = event.pageX - $canvas.offset().left
+            var y = event.pageY - $canvas.offset().top
+            
+            // Is x in range
+            for(var i = 1; i <= depth; i++){
+                var boxX = boxes[Math.pow(2, i)].position.x;
+                
+                if(boxX + options.width / 2 < x){
+                    return;
+                }
+                
+                if(boxX - options.width / 2 < x){
+                    // Is y in range
+                    for(var j = Math.pow(2, i - 1); j < Math.pow(2, i); j++){
+                        var box1Y = boxes[j * 2].position.y;
+                        var box2Y = boxes[j * 2 + 1].position.y;
+                        
+                        if(box1Y - options.height / 2 > y){
+                            return;
+                        }
+                        
+                        if(box2Y + options.height / 2 > y){
+                            var team1 = tournament.names[j * 2];
+                            var team2 = tournament.names[j * 2 + 1];
+                            
+                            if(team1 != "-" && team2 != "-"){
+                                $position.val(j);
+                                $matchFixtureContainer.show();
+                                $fixtureDate.val(tournament.fixtures[j][0]);
+                                $fixtureTime.val(tournament.fixtures[j][1]);
+                                
+                                if(team1 != "" && team2 != ""){
+                                    $winner.empty();
+                                    $winner.append(new Option("Winner", ""));
+                                    $winner.append(new Option(team1, team1));
+                                    $winner.append(new Option(team2, team2));
+                                    $homeScore.val(tournament.scores[j][0]);
+                                    $awayScore.val(tournament.scores[j][1]);
+                                    $matchResultContainer.show();
+                                }
+                            }
+                            
+                            return;
+                        }
+                    }
+                    
+                    return;
+                }
+            }
+        }
 
         var init = function(){
             paper.setup(canvas);
@@ -317,8 +385,12 @@
             
             paper.view.draw();
         }
-
+        
         init();
+        
+        $canvas.mousedown(function(event){
+            showMatchEditor(event);
+        });
 
         return {
             redraw : function(knockoutOptions){
