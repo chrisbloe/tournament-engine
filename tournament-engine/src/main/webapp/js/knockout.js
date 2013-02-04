@@ -160,7 +160,7 @@
             }
         };
 
-        var drawBoxes = function(i){
+        var drawBox = function(i){
             boxes[i * 2] = boxes[i].clone();
             boxes[i * 2].position.x -= options.width * (options.widthDistance + 1);
             boxes[i * 2].position.y -= ychange;
@@ -177,7 +177,7 @@
             participant.content = tournament.names[i];
         };
 
-        var addLines = function(i){
+        var addLine = function(i){
             //   .       .
             //(x1,y1) (x2,y1)
             //
@@ -214,7 +214,7 @@
             location.content = tournament.locations[i];
         };
 
-        var addScoresAndFixtures = function(i){
+        var addScoreOrFixture = function(i){
             var x = boxes[i].position.x - options.widthDistance * options.width * (1 - options.lineLength) - options.width / 2 + options.fontAllowance;
             var y = boxes[i].position.y;
 
@@ -294,18 +294,18 @@
                 ychange = options.height * Math.pow(2, depth - depthDistance - 1) * options.heightDistance;
 
                 // Draw the boxes
-                drawBoxes(i);
+                drawBox(i);
 
                 // Put the team name in the box
                 addText(i * 2);
                 addText(i * 2 + 1);
 
                 // Draw the lines between the boxes
-                addLines(i);
+                addLine(i);
 
                 addLocation(i);
 
-                addScoresAndFixtures(i);
+                addScoreOrFixture(i);
             }
 
             // Needs doing after otherwise the colours will be cloned
