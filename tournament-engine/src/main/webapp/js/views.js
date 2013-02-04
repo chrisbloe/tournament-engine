@@ -76,9 +76,8 @@
     *
     * @author Dan Delaney http://fluidmind.org/
     * @param  element     The HTML select element to be sorted
-    * @param  direction   The sort direction: 'asc' or 'desc' (optional)
     */
-   var sortOptions = function(element, direction){
+   var sortOptions = function(element){
        // We have to put the whole options array into a new array, because
        // the options array doesn't support all of the Array methods (like sort)
        // Doesn't that suck?
@@ -99,11 +98,6 @@
             
             return 0;
         });
-
-       // If asked to sort in descending, reverse it
-       if(direction != undefined && direction.toLowerCase() == 'desc'){
-           options.reverse();
-       }
 
        // Now copy the array back into the options array
        for(var i = 0; i < options.length; i++){

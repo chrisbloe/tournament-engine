@@ -25,7 +25,7 @@
             widthDistance  : 1.2, // The distance between each round
             heightDistance : 0.9, // The distance between the far left boxes
             fontAllowance  : 5,   // Add fontAllowance so the text isn't covered by the lines
-            leftmargin     : 40,
+            margin         : 40,
 
             applyValues    : function(args) {
                 Utils.applyValues(args, this);
@@ -146,7 +146,7 @@
                 x = x - options.width * (options.widthDistance + 1);
             }
 
-            x = options.leftmargin + options.width / 2;
+            x = options.margin + options.width / 2;
             var k = 1;
 
             // Add any previous rounds
@@ -252,10 +252,27 @@
             }
         };
 
+        var setCanvasDimentions = function(){
+            if(boxes[Math.pow(2, depth + 1) - 1]) {
+                canvas.height = boxes[Math.pow(2, depth + 1) - 1].position.y + options.height;
+                canvas.width = 2 * options.margin + options.width * (1 + (depth * (options.widthDistance + 1)));
+            }
+        };
+
+        var drawCanvasOutline = function(){
+            new paper.Path(new paper.Point(1, 1),
+                           new paper.Point(canvas.width - 1, 1),
+                           new paper.Point(canvas.width - 1, canvas.height - 1),
+                           new paper.Point(1, canvas.height - 1),
+                           new paper.Point(1, 1))
+                     .strokeColor = 'black';
+        };
+
         var init = function(){
             paper.setup(canvas);
+            
             depth = Math.floor((Math.log(tournament.names.length - 1))/(Math.log(2)));
-            startx = depth * options.width * (options.widthDistance + 1) + options.leftmargin;
+            startx = depth * options.width * (options.widthDistance + 1) + options.margin;
             starty = options.height * options.heightDistance * (Math.pow(2, depth) - 1) + options.header + 1;
 
             addHeaders();
@@ -293,6 +310,10 @@
 
             // Needs doing after otherwise the colours will be cloned
             addSuccessColors();
+            
+            setCanvasDimentions();
+            
+            drawCanvasOutline();
             
             paper.view.draw();
         }

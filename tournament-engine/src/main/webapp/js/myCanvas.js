@@ -4,7 +4,7 @@ $(document).ready(function(){
 //    var teams = ['Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'];
 //    var teams = ['Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'];
     
-    var knockout = new Knockout("knockoutCanvas");
+    var knockout = new Knockout("knockout-canvas");
     
 //    knockout.createRandomTournament(teams);
     
@@ -15,7 +15,7 @@ $(document).ready(function(){
 //        fixtures  : [['', ''], ['18/10/2013', '15:00'], ['11/10/2013', '15:00']]
 //    };
 //
-//    var knockout = new Knockout("knockoutCanvas", knockoutTournament);
+//    var knockout = new Knockout("knockout-canvas", knockoutTournament);
     
     new CreateTournament(knockout);
     

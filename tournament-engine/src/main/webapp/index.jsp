@@ -26,8 +26,7 @@
         </div>
         
         <div id="tournament-div" hidden="hidden">
-<!--          <canvas id="knockoutCanvas" resize></canvas>-->
-            <canvas id="knockoutCanvas" height="500" width="900"></canvas>
+            <canvas id="knockout-canvas"></canvas>
 
             <br />
 
