@@ -4,6 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
+        <link rel="stylesheet" href="css/canvas.css">
         <title>Canvas demo area</title>
     </head>
     <body>
@@ -26,7 +27,9 @@
         </div>
         
         <div id="tournament-div" hidden="hidden">
-            <canvas id="knockout-canvas"></canvas>
+            <div class="canvas-container">
+                <canvas id="knockout-canvas"></canvas>
+            </div>
 
             <br />
 
