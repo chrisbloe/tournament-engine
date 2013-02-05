@@ -94,17 +94,6 @@
                     this.names.push(firstRound[k - minPosition]);
                 }
                 
-                // THIS NEEDS MOVING OUT INTO ITS OWN FUNCTION!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                for(var l = minPosition - 1; l > 0; l--){
-                    if(this.names[l * 2] == '-'){
-                        this.names[l] = this.names[l * 2 + 1];
-                    } else {
-                        if(this.names[l * 2 + 1] == '-'){
-                            this.names[l] = this.names[l * 2];
-                        }
-                    }
-                }
-                
                 // Fill in the other parts
                 for(var j = 0; j <= minPosition; j++){
                     this.locations[j] = '';
@@ -234,6 +223,23 @@
 
                     var fixtureTime = new paper.PointText(new paper.Point(x, y + options.fontAllowance * 3));
                     fixtureTime.content = tournament.fixtures[i][1];
+                }
+            }
+        };
+
+        var addByes = function(){
+            var maxDepth = Math.ceil((Math.log(tournament.names.length))/(Math.log(2)));
+            var minPosition = Math.pow(2, maxDepth - 1);
+            
+            for(var i = minPosition - 1; i > 0; i--){
+                if(tournament.names[i * 2] == '-'){
+                    tournament.names[i] = tournament.names[i * 2 + 1];
+                    addText(i);
+                } else {
+                    if(tournament.names[i * 2 + 1] == '-'){
+                        tournament.names[i] = tournament.names[i * 2];
+                        addText(i);
+                    }
                 }
             }
         };
@@ -375,7 +381,9 @@
 
                 addScoreOrFixture(i);
             }
-
+            
+            addByes();
+            
             // Needs doing after otherwise the colours will be cloned
             addSuccessColors();
             
