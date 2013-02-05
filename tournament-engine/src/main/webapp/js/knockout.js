@@ -277,6 +277,7 @@
         };
         
         var showMatchEditor = function(event){
+            var $matchDataContainer = $("#match-data-container");
             var $matchFixtureContainer = $("#match-fixture-container");
             var $matchResultContainer = $("#match-result-container");
             var $canvas = $("#knockout-canvas");
@@ -317,6 +318,8 @@
                             var team2 = tournament.names[j * 2 + 1];
                             
                             if(team1 != "-" && team2 != "-"){
+                                $matchDataContainer.dialog("open");
+                                
                                 $position.val(j);
                                 $matchFixtureContainer.show();
                                 $fixtureDate.val(tournament.fixtures[j][0]);
@@ -398,6 +401,19 @@
         
         $canvas.mousedown(function(event){
             showMatchEditor(event);
+        });
+        
+        $("#match-data-container").dialog({
+            autoOpen  : false,
+            modal     : true,
+            resizable : false,
+            title     : "Edit match...",
+            width     : "auto",
+            buttons   : [{ text  : "Sorted.",
+                          click : function(){
+                                      $(this).dialog("close");
+                                  }
+                       }]
         });
 
         return {

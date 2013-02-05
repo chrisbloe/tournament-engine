@@ -4,9 +4,8 @@
         var $winner = $("#winner");
         var $homeScore = $("#home-score");
         var $awayScore = $("#away-score");
-        var $scoreButton = $("#score-button");
         
-        $scoreButton.on("click", function(){
+        var updateScore = function(){
             var position = $position.val();
             var winner = $winner.val();
             var homeScore = $homeScore.val();
@@ -14,6 +13,18 @@
            
             var result = {winner:winner, scores:[homeScore, awayScore], position: position};
             knockout.addResult(result);
+        };
+        
+        $winner.change(function(){
+            updateScore();
+        });
+        
+        $homeScore.on('change paste textInput input', function(){
+            updateScore();
+        });
+        
+        $awayScore.on('change paste textInput input', function(){
+            updateScore();
         });
     };
     
@@ -21,7 +32,15 @@
         var $position = $("#position");
         var $fixtureDate = $("#fixture-date");
         var $fixtureTime = $("#fixture-time");
-        var $fixtureButton = $("#fixture-button");
+        
+        var updateFixture = function(){
+            var position = $position.val();
+            var date = $fixtureDate.val();
+            var time = $fixtureTime.val();
+            
+            var fixture = {date:date, time:time, position: position};
+            knockout.addFixture(fixture);
+        };
         
         $fixtureDate.datepicker({
             autoSize    : true,
@@ -29,13 +48,12 @@
             firstDay    : 1
         });
         
-        $fixtureButton.on("click", function(){
-            var position = $position.val();
-            var date = $fixtureDate.val();
-            var time = $fixtureTime.val();
-           
-            var fixture = {date:date, time:time, position: position};
-            knockout.addFixture(fixture);
+        $fixtureDate.on('change paste textInput input', function(){
+            updateFixture();
+        });
+        
+        $fixtureTime.on('change paste textInput input', function(){
+            updateFixture();
         });
     };
     
