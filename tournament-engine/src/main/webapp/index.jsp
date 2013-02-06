@@ -30,18 +30,14 @@
             <button id="create-cournament-button">Create knockout tournament</button>
         </div>
         
-        <div id="tournament-div" hidden="hidden">
-            <div class="canvas-container">
-                <canvas id="knockout-canvas"></canvas>
-            </div>
-
-            <br />
+        <div id="tournament-div" class="canvas-container" hidden="hidden">
+            <canvas id="knockout-canvas"></canvas>
             
             <div id="match-data-container">
                 <div id="match-fixture-container" hidden="hidden">
                     <input id="fixture-date" placeholder="Date" maxlength="10" />
                     <br />
-                    <input type="time" id="fixture-time" placeholder="Time (19:30)" maxlength="5" />
+                    <input type="time" id="fixture-time" />
                 </div>
 
                 <div id="match-result-container" hidden="hidden">
