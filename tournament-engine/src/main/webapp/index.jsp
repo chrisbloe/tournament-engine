@@ -37,8 +37,6 @@
 
             <br />
             
-            <input id="position" hidden="hidden" />
-            
             <div id="match-data-container">
                 <div id="match-fixture-container" hidden="hidden">
                     <input id="fixture-date" placeholder="Date" maxlength="10" />

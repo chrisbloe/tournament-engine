@@ -54,24 +54,21 @@
             scores      : [['', '']],
             fixtures    : [['', '']],
             headers     : ['Winner', 'Final', 'SF', 'QF'],
+            position    : 0,
 
             applyValues : function(args){
                 Utils.applyValues(args, this);
             },
             
             addFixture  : function(fixture){
-                var position = fixture.position;
-                
-                this.fixtures[position][0] = fixture.date;
-                this.fixtures[position][1] = fixture.time;
+                this.fixtures[this.position][0] = fixture.date;
+                this.fixtures[this.position][1] = fixture.time;
             },
             
             addResult   : function(result){
-                var position = result.position;
-                
-                this.names[position] = result.winner;
-                this.scores[position][0] = result.scores[0];
-                this.scores[position][1] = result.scores[1];
+                this.names[this.position] = result.winner;
+                this.scores[this.position][0] = result.scores[0];
+                this.scores[this.position][1] = result.scores[1];
             },
             
             createRandomTournament : function(teams){
@@ -290,7 +287,6 @@
             var $matchFixtureContainer = $("#match-fixture-container");
             var $matchResultContainer = $("#match-result-container");
             var $canvas = $("#knockout-canvas");
-            var $position = $("#position");
             
             var $fixtureDate = $("#fixture-date");
             var $fixtureTime = $("#fixture-time");
@@ -329,7 +325,7 @@
                             if(team1 != "-" && team2 != "-"){
                                 $matchDataContainer.dialog("open");
                                 
-                                $position.val(j);
+                                tournament.position = j;
                                 $matchFixtureContainer.show();
                                 $fixtureDate.val(tournament.fixtures[j][0]);
                                 $fixtureTime.val(tournament.fixtures[j][1]);
@@ -453,18 +449,16 @@
                             ///////////
     
     SubmitScoreView = function(knockout){
-        var $position = $("#position");
         var $winner = $("#winner");
         var $homeScore = $("#home-score");
         var $awayScore = $("#away-score");
         
         var updateScore = function(){
-            var position = $position.val();
             var winner = $winner.val();
             var homeScore = $homeScore.val();
             var awayScore = $awayScore.val();
            
-            var result = {winner:winner, scores:[homeScore, awayScore], position: position};
+            var result = {winner:winner, scores:[homeScore, awayScore]};
             knockout.addResult(result);
         };
         
@@ -482,16 +476,14 @@
     };
     
     SubmitFixture = function(knockout){
-        var $position = $("#position");
         var $fixtureDate = $("#fixture-date");
         var $fixtureTime = $("#fixture-time");
         
         var updateFixture = function(){
-            var position = $position.val();
             var date = $fixtureDate.val();
             var time = $fixtureTime.val();
             
-            var fixture = {date:date, time:time, position: position};
+            var fixture = {date:date, time:time};
             knockout.addFixture(fixture);
         };
         
