@@ -1,16 +1,26 @@
 ;(function($, paper){
+    $.fn.knockout = function(knockoutTournament, knockoutOptions){
+        var knockout = new Knockout(this, knockoutTournament, knockoutOptions);
+
+        new SubmitScoreView(knockout);
+
+        new SubmitFixture(knockout);
+        
+        return knockout;
+    };
+    
     var Utils = {
         applyValues : function(properties,target){
-            if(properties) {
+            if(properties){
                 $.each(properties, function(name, value){
-                    if(target.hasOwnProperty(name)) {
+                    if(target.hasOwnProperty(name)){
                         target[name] = value;
                     }
                 });
             }
         },
 
-        shuffle : function(arr) {
+        shuffle : function(arr){
             for(var j, x, i = arr.length; i; j = parseInt(Math.random() * i), x = arr[--i], arr[i] = arr[j], arr[j] = x);
             return arr;
         }
@@ -27,7 +37,7 @@
             fontAllowance  : 5,   // Add fontAllowance so the text isn't covered by the lines
             margin         : 40,
 
-            applyValues    : function(args) {
+            applyValues    : function(args){
                 Utils.applyValues(args, this);
             }
         };
@@ -78,8 +88,8 @@
                 var firstRound = new Array();
                 
                 // Add teams to an array big enough for the first round
-                for(var i = 0; i < Math.pow(2, maxDepth); i++) {
-                    if(teams[i]) {
+                for(var i = 0; i < Math.pow(2, maxDepth); i++){
+                    if(teams[i]){
                         firstRound[i] = teams[i];
                     } else {
                         firstRound[i] = '-';
@@ -90,7 +100,7 @@
                 firstRound = Utils.shuffle(firstRound);
                 
                 // Append the first round to the end of the earlier rounds
-                for(var k = minPosition; k <= maxPosition; k++) {
+                for(var k = minPosition; k <= maxPosition; k++){
                     this.names.push(firstRound[k - minPosition]);
                 }
                 
@@ -108,8 +118,7 @@
         return tournament;
     };
     
-    Knockout = function(id, knockoutTournament, knockoutOptions){
-        var $canvas       = $('#'+id);
+    Knockout = function($canvas, knockoutTournament, knockoutOptions){
         var canvas        = $canvas[0];
         
         var tournament    = new KnockoutTournament(knockoutTournament);
@@ -128,7 +137,7 @@
             var y = options.header / 2 + options.fontAllowance;
 
             // Add QF, SF, Final and Winner headers
-            for(var i = 0; i <= depth && i < tournament.headers.length; i++) {
+            for(var i = 0; i <= depth && i < tournament.headers.length; i++){
                 var finalsHeader = new paper.PointText(new paper.Point(x, y));
                 finalsHeader.justification = 'center';
                 finalsHeader.content = tournament.headers[i];
@@ -141,7 +150,7 @@
             var k = 1;
 
             // Add any previous rounds
-            for(var j = depth; j > tournament.headers.length - 1; j--) {
+            for(var j = depth; j > tournament.headers.length - 1; j--){
                 var roundHeader = new paper.PointText(new paper.Point(x, y));
                 roundHeader.justification = 'center';
                 roundHeader.content = 'Round ' + k;
@@ -210,14 +219,14 @@
             var y = boxes[i].position.y;
 
             if((tournament.scores[i] != 'undefined') &&
-               (tournament.scores[i][0] != '' && tournament.scores[i][1] != '')) {
+               (tournament.scores[i][0] != '' && tournament.scores[i][1] != '')){
                 var homeScore = new paper.PointText(new paper.Point(x, y - options.fontAllowance));
                 homeScore.content = tournament.scores[i][0];
 
                 var awayScore = new paper.PointText(new paper.Point(x, y + options.fontAllowance * 3));
                 awayScore.content = tournament.scores[i][1];
             } else {
-                if(tournament.fixtures[i][0] != 'undefined' && tournament.fixtures[i][1] != 'undefined') {
+                if(tournament.fixtures[i][0] != 'undefined' && tournament.fixtures[i][1] != 'undefined'){
                     var fixtureDate = new paper.PointText(new paper.Point(x, y - options.fontAllowance));
                     fixtureDate.content = tournament.fixtures[i][0];
 
@@ -245,15 +254,15 @@
         };
 
         var addSuccessColors = function(){
-            for(var i = 1; i < Math.pow(2, depth); i++) {
+            for(var i = 1; i < Math.pow(2, depth); i++){
                 var winningTeam = tournament.names[i];
                 
-                if(winningTeam != '' && winningTeam != '-') {
-                    if(winningTeam == tournament.names[i * 2]) {
+                if(winningTeam != '' && winningTeam != '-'){
+                    if(winningTeam == tournament.names[i * 2]){
                         boxes[i * 2].strokeColor = 'green';
                     }
 
-                    if(winningTeam == tournament.names[i * 2 + 1]) {
+                    if(winningTeam == tournament.names[i * 2 + 1]){
                         boxes[i * 2 + 1].strokeColor = 'green';
                     }
                 }
@@ -261,7 +270,7 @@
         };
 
         var setCanvasDimentions = function(){
-            if(boxes[Math.pow(2, depth + 1) - 1]) {
+            if(boxes[Math.pow(2, depth + 1) - 1]){
                 canvas.height = boxes[Math.pow(2, depth + 1) - 1].position.y + options.height;
                 canvas.width = 2 * options.margin + options.width * (1 + (depth * (options.widthDistance + 1)));
             }
@@ -363,7 +372,7 @@
 
             addText(1);
 
-            for(var i = 1; i < Math.pow(2, depth); i++) {
+            for(var i = 1; i < Math.pow(2, depth); i++){
                 // How many depths down is i?
                 depthDistance = Math.floor((Math.log(i))/(Math.log(2)));
 
@@ -438,4 +447,66 @@
             }
         };
     }
+    
+                            ///////////
+                            // Views //
+                            ///////////
+    
+    SubmitScoreView = function(knockout){
+        var $position = $("#position");
+        var $winner = $("#winner");
+        var $homeScore = $("#home-score");
+        var $awayScore = $("#away-score");
+        
+        var updateScore = function(){
+            var position = $position.val();
+            var winner = $winner.val();
+            var homeScore = $homeScore.val();
+            var awayScore = $awayScore.val();
+           
+            var result = {winner:winner, scores:[homeScore, awayScore], position: position};
+            knockout.addResult(result);
+        };
+        
+        $winner.change(function(){
+            updateScore();
+        });
+        
+        $homeScore.on('change paste textInput input', function(){
+            updateScore();
+        });
+        
+        $awayScore.on('change paste textInput input', function(){
+            updateScore();
+        });
+    };
+    
+    SubmitFixture = function(knockout){
+        var $position = $("#position");
+        var $fixtureDate = $("#fixture-date");
+        var $fixtureTime = $("#fixture-time");
+        
+        var updateFixture = function(){
+            var position = $position.val();
+            var date = $fixtureDate.val();
+            var time = $fixtureTime.val();
+            
+            var fixture = {date:date, time:time, position: position};
+            knockout.addFixture(fixture);
+        };
+        
+        $fixtureDate.datepicker({
+            autoSize    : true,
+            dateFormat  : "dd-mm-yy",
+            firstDay    : 1
+        });
+        
+        $fixtureDate.on('change paste textInput input', function(){
+            updateFixture();
+        });
+        
+        $fixtureTime.on('change paste textInput input', function(){
+            updateFixture();
+        });
+    };
 })(jQuery, paper);

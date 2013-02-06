@@ -43,7 +43,7 @@
                 <div id="match-fixture-container" hidden="hidden">
                     <input id="fixture-date" placeholder="Date" maxlength="10" />
                     <br />
-                    <input id="fixture-time" placeholder="Time (19:30)" maxlength="5" />
+                    <input type="time" id="fixture-time" placeholder="Time (19:30)" maxlength="5" />
                 </div>
 
                 <div id="match-result-container" hidden="hidden">
@@ -70,7 +70,7 @@
         
         <script type="text/javascript" src="js/vendor/paper.js"></script>
         <script type="text/javascript" src="js/knockout.js"></script>
-        <script type="text/javascript" src="js/views.js"></script>
+        <script type="text/javascript" src="js/tournamentCreator.js"></script>
         <script type="text/javascript" src="js/myCanvas.js"></script>
     </body>
 </html>
