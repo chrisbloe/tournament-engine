@@ -5,7 +5,7 @@
     
     var TournamentCreator = function(knockout){
         var $createDiv = $("#create-div");
-        var $tournamentDiv = $("#tournament-div");
+        var $knockoutTournament = $("#knockout-tournament");
 
         var $newTeam = $("#new-team");
         var $addTeamButton = $("#add-team-button");
@@ -51,7 +51,7 @@
 //            $('#knockout-canvas').knockout(knockoutTournament);
 
             $createDiv.hide();
-            $tournamentDiv.show();
+            $knockoutTournament.show();
         });
 
        /**

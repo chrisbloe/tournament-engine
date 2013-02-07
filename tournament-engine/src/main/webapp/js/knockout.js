@@ -1,6 +1,11 @@
 ;(function($, paper){
     $.fn.knockout = function(knockoutTournament, knockoutOptions){
-        var knockout = new Knockout(this, knockoutTournament, knockoutOptions);
+        
+        this.addClass("canvas-container")
+            .append('<canvas class="knockout-canvas"></canvas>')
+            .hide();
+        
+        var knockout = new Knockout(this.find(".knockout-canvas"), knockoutTournament, knockoutOptions);
 
         new SubmitScoreView(knockout);
 

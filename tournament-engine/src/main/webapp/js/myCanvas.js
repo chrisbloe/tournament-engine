@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    var knockout = $('#knockout-canvas').knockout();
+    var knockout = $('#knockout-tournament').knockout();
     
     $("#create-div").tournamentCreator(knockout);
     $("#new-team").focus();
