@@ -1,15 +1,42 @@
 ;(function($, paper){
     $.fn.knockout = function(knockoutTournament, knockoutOptions){
+        var $matchFixtureContainer = $('<div/>', {'class':'match-fixture-container', 'hidden':'hidden'})
+                                        .append(
+                                            $('<input/>', {'class':'fixture-date', 'placeholder':'Date', 'maxlength':'10'})
+                                        ).append(
+                                            $('<br/>')
+                                        ).append(
+                                            $('<input/>', {'class':'fixture-time', 'type':'time'})
+                                        );
+        
+        var $matchResultContainer = $('<div/>', {'class':'match-result-container', 'hidden':'hidden'})
+                                        .append(
+                                            $('<br/>')
+                                        ).append(
+                                            $('<select/>', {'class':'winner'})
+                                        ).append(
+                                            $('<br/>')
+                                        ).append(
+                                            $('<input/>', {'class':'home-score', 'placeholder':'Home score'})
+                                        ).append(
+                                            $('<br/>')
+                                        ).append(
+                                            $('<input/>', {'class':'away-score', 'placeholder':'Away score'})
+                                        );
+        
+        var $matchDataContainer = $('<div/>', {'class':'match-data-container'})
+                                    .append($matchFixtureContainer).append($matchResultContainer);
         
         this.addClass("canvas-container")
             .append($('<canvas/>', {'class':'knockout-canvas'}))
+            .append($matchDataContainer)
             .hide();
         
-        var knockout = new Knockout(this.find(".knockout-canvas"), knockoutTournament, knockoutOptions);
-
-        new SubmitScoreView(knockout);
-
-        new SubmitFixture(knockout);
+        var knockout = new Knockout(this, knockoutTournament, knockoutOptions);
+        
+        new SubmitFixture($matchFixtureContainer, knockout);
+        
+        new SubmitResult($matchResultContainer, knockout);
         
         return knockout;
     };
@@ -120,19 +147,31 @@
         return tournament;
     };
     
-    Knockout = function($canvas, knockoutTournament, knockoutOptions){
-        var canvas        = $canvas[0];
+    Knockout = function($tournamentContainer, knockoutTournament, knockoutOptions){
+        var $matchDataContainer = $tournamentContainer.children(".match-data-container");
         
-        var tournament    = new KnockoutTournament(knockoutTournament);
-        var options       = new Options(knockoutOptions);
+        var $matchFixtureContainer = $matchDataContainer.children(".match-fixture-container");
+        var $fixtureDate = $matchFixtureContainer.children(".fixture-date");
+        var $fixtureTime = $matchFixtureContainer.children(".fixture-time");
+        
+        var $matchResultContainer = $matchDataContainer.children(".match-result-container");
+        var $winner = $matchResultContainer.children(".winner");
+        var $homeScore = $matchResultContainer.children(".home-score");
+        var $awayScore = $matchResultContainer.children(".away-score");
+        
+        var $canvas             = $tournamentContainer.children(".knockout-canvas")
+        var canvas              = $canvas[0];
+        
+        var tournament          = new KnockoutTournament(knockoutTournament);
+        var options             = new Options(knockoutOptions);
 
-        var depth         = 0;
-        var startx        = 0; // The top left corner of box[1]
-        var starty        = 0; // The top left corner of box[1]
-        var depthDistance = 0;
-        var ychange       = 0;
+        var depth               = 0;
+        var startx              = 0; // The top left corner of box[1]
+        var starty              = 0; // The top left corner of box[1]
+        var depthDistance       = 0;
+        var ychange             = 0;
 
-        var boxes         = new Array(); // required
+        var boxes               = new Array(); // required
 
         var addHeaders = function(){
             var x = startx + options.width / 2;
@@ -288,16 +327,6 @@
         };
         
         var showMatchEditor = function(event){
-            var $matchDataContainer = $("#match-data-container");
-            var $matchFixtureContainer = $("#match-fixture-container");
-            var $matchResultContainer = $("#match-result-container");
-            
-            var $fixtureDate = $("#fixture-date");
-            var $fixtureTime = $("#fixture-time");
-            var $winner = $("#winner");
-            var $homeScore = $("#home-score");
-            var $awayScore = $("#away-score");
-            
             $matchFixtureContainer.hide();
             $matchResultContainer.hide();
             
@@ -412,7 +441,7 @@
             showMatchEditor(event);
         });
         
-        $("#match-data-container").dialog({
+        $matchDataContainer.dialog({
             autoOpen  : false,
             modal     : true,
             resizable : false,
@@ -452,10 +481,10 @@
                             // Views //
                             ///////////
     
-    SubmitScoreView = function(knockout){
-        var $winner = $("#winner");
-        var $homeScore = $("#home-score");
-        var $awayScore = $("#away-score");
+    SubmitResult = function($matchResultContainer, knockout){
+        var $winner = $matchResultContainer.children(".winner");
+        var $homeScore = $matchResultContainer.children(".home-score");
+        var $awayScore = $matchResultContainer.children(".away-score");
         
         var updateScore = function(){
             var winner = $winner.val();
@@ -479,9 +508,9 @@
         });
     };
     
-    SubmitFixture = function(knockout){
-        var $fixtureDate = $("#fixture-date");
-        var $fixtureTime = $("#fixture-time");
+    SubmitFixture = function($matchFixtureContainer, knockout){
+        var $fixtureDate = $matchFixtureContainer.children(".fixture-date");
+        var $fixtureTime = $matchFixtureContainer.children(".fixture-time");
         
         var updateFixture = function(){
             var date = $fixtureDate.val();

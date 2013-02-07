@@ -30,25 +30,7 @@
             <button id="create-cournament-button">Create knockout tournament</button>
         </div>
         
-        <div id="knockout-tournament">
-            <div id="match-data-container">
-                <div id="match-fixture-container" hidden="hidden">
-                    <input id="fixture-date" placeholder="Date" maxlength="10" />
-                    <br />
-                    <input type="time" id="fixture-time" />
-                </div>
-
-                <div id="match-result-container" hidden="hidden">
-                    <br />
-
-                    <select id="winner"></select>
-                    <br />
-                    <input id="home-score" placeholder="Home score" />
-                    <br />
-                    <input id="away-score" placeholder="Away score" />
-                </div>
-            </div>
-        </div>
+        <div id="knockout-tournament" />
         
         <footer>
             <p>&copy; Answer Consulting Ltd. <script>document.write(new Date().getFullYear())</script></p>
