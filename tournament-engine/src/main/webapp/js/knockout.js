@@ -57,7 +57,7 @@
         }
     };
     
-    var Options = function(knockoutOptions){
+    var DisplayOptions = function(displayOptions){
         var optionList = {
             width          : 90,
             height         : 30,
@@ -73,7 +73,7 @@
             }
         };
         
-        optionList.applyValues(knockoutOptions);
+        optionList.applyValues(displayOptions);
         
         return optionList;
     };
@@ -160,10 +160,6 @@
     };
     
     Knockout = function($tournamentContainer, tournamentOptions){
-        var teams              = tournamentOptions.teams;
-        var knockoutTournament = tournamentOptions.knockoutTournament;
-        var knockoutOptions    = tournamentOptions.knockoutOptions;
-        
         var $matchDataContainer = $tournamentContainer.children(".match-data-container");
         
         var $matchFixtureContainer = $matchDataContainer.children(".match-fixture-container");
@@ -178,8 +174,8 @@
         var $canvas             = $tournamentContainer.children(".knockout-canvas")
         var canvas              = $canvas[0];
         
-        var tournament          = new KnockoutTournament(teams, knockoutTournament);
-        var options             = new Options(knockoutOptions);
+        var tournament          = new KnockoutTournament(tournamentOptions.teams, tournamentOptions.knockoutTournament);
+        var displayOptions      = new DisplayOptions(tournamentOptions.displayOptions);
 
         var depth               = 0;
         var startx              = 0; // The top left corner of box[1]
@@ -190,8 +186,8 @@
         var boxes               = new Array(); // required
 
         var addHeaders = function(){
-            var x = startx + options.width / 2;
-            var y = options.header / 2 + options.fontAllowance;
+            var x = startx + displayOptions.width / 2;
+            var y = displayOptions.header / 2 + displayOptions.fontAllowance;
 
             // Add QF, SF, Final and Winner headers
             for(var i = 0; i <= depth && i < tournament.headers.length; i++){
@@ -200,10 +196,10 @@
                 finalsHeader.content = tournament.headers[i];
 
                 // Work from the right, moving left
-                x = x - options.width * (options.widthDistance + 1);
+                x = x - displayOptions.width * (displayOptions.widthDistance + 1);
             }
 
-            x = options.margin + options.width / 2;
+            x = displayOptions.margin + displayOptions.width / 2;
             var k = 1;
 
             // Add any previous rounds
@@ -212,22 +208,22 @@
                 roundHeader.justification = 'center';
                 roundHeader.content = 'Round ' + k;
 
-                x = x + options.width * (options.widthDistance + 1);
+                x = x + displayOptions.width * (displayOptions.widthDistance + 1);
                 k++;
             }
         };
 
         var drawBox = function(i){
             boxes[i * 2] = boxes[i].clone();
-            boxes[i * 2].position.x -= options.width * (options.widthDistance + 1);
+            boxes[i * 2].position.x -= displayOptions.width * (displayOptions.widthDistance + 1);
             boxes[i * 2].position.y -= ychange;
 
             boxes[i * 2 + 1] = boxes[i * 2].clone();
-            boxes[i * 2 + 1].position.y += options.height * Math.pow(2, depth - depthDistance) * options.heightDistance;
+            boxes[i * 2 + 1].position.y += displayOptions.height * Math.pow(2, depth - depthDistance) * displayOptions.heightDistance;
         };
 
         var addText = function(i){
-            var y = boxes[i].position.y + options.fontAllowance;
+            var y = boxes[i].position.y + displayOptions.fontAllowance;
 
             var participant = new paper.PointText(new paper.Point(boxes[i].position.x, y));
             participant.justification = 'center';
@@ -243,14 +239,14 @@
             //
             //   .       .
             //(x1,y3) (x2,y3)
-            var x = boxes[i].position.x - options.width / 2;
-            var x1 = x - options.width * options.widthDistance;
-            var x2 = x1 + options.lineLength * (x - x1)
+            var x = boxes[i].position.x - displayOptions.width / 2;
+            var x1 = x - displayOptions.width * displayOptions.widthDistance;
+            var x2 = x1 + displayOptions.lineLength * (x - x1)
 
-            var y = boxes[i].position.y - options.height / 2;
-            var y1 = y + options.height / 2 - ychange;
-            var y2 = y + options.height / 2;
-            var y3 = y + options.height / 2 + ychange;
+            var y = boxes[i].position.y - displayOptions.height / 2;
+            var y1 = y + displayOptions.height / 2 - ychange;
+            var y2 = y + displayOptions.height / 2;
+            var y3 = y + displayOptions.height / 2 + ychange;
 
             new paper.Path(new paper.Point(x1, y1),
                            new paper.Point(x2, y1),
@@ -263,8 +259,8 @@
         };
 
         var addLocation = function(i){
-            var x = boxes[i].position.x - options.width * (options.widthDistance + 1);
-            var y = boxes[i].position.y + options.fontAllowance;
+            var x = boxes[i].position.x - displayOptions.width * (displayOptions.widthDistance + 1);
+            var y = boxes[i].position.y + displayOptions.fontAllowance;
 
             var location = new paper.PointText(new paper.Point(x, y));
             location.justification = 'center';
@@ -272,22 +268,22 @@
         };
 
         var addScoreOrFixture = function(i){
-            var x = boxes[i].position.x - options.widthDistance * options.width * (1 - options.lineLength) - options.width / 2 + options.fontAllowance;
+            var x = boxes[i].position.x - displayOptions.widthDistance * displayOptions.width * (1 - displayOptions.lineLength) - displayOptions.width / 2 + displayOptions.fontAllowance;
             var y = boxes[i].position.y;
 
             if((tournament.scores[i] != 'undefined') &&
                (tournament.scores[i][0] != '' && tournament.scores[i][1] != '')){
-                var homeScore = new paper.PointText(new paper.Point(x, y - options.fontAllowance));
+                var homeScore = new paper.PointText(new paper.Point(x, y - displayOptions.fontAllowance));
                 homeScore.content = tournament.scores[i][0];
 
-                var awayScore = new paper.PointText(new paper.Point(x, y + options.fontAllowance * 3));
+                var awayScore = new paper.PointText(new paper.Point(x, y + displayOptions.fontAllowance * 3));
                 awayScore.content = tournament.scores[i][1];
             } else {
                 if(tournament.fixtures[i][0] != 'undefined' && tournament.fixtures[i][1] != 'undefined'){
-                    var fixtureDate = new paper.PointText(new paper.Point(x, y - options.fontAllowance));
+                    var fixtureDate = new paper.PointText(new paper.Point(x, y - displayOptions.fontAllowance));
                     fixtureDate.content = tournament.fixtures[i][0];
 
-                    var fixtureTime = new paper.PointText(new paper.Point(x, y + options.fontAllowance * 3));
+                    var fixtureTime = new paper.PointText(new paper.Point(x, y + displayOptions.fontAllowance * 3));
                     fixtureTime.content = tournament.fixtures[i][1];
                 }
             }
@@ -328,8 +324,8 @@
 
         var setCanvasDimentions = function(){
             if(boxes[Math.pow(2, depth + 1) - 1]){
-                canvas.height = boxes[Math.pow(2, depth + 1) - 1].position.y + options.height;
-                canvas.width = 2 * options.margin + options.width * (1 + (depth * (options.widthDistance + 1)));
+                canvas.height = boxes[Math.pow(2, depth + 1) - 1].position.y + displayOptions.height;
+                canvas.width = 2 * displayOptions.margin + displayOptions.width * (1 + (depth * (displayOptions.widthDistance + 1)));
             }
         };
 
@@ -353,21 +349,21 @@
             for(var i = 1; i <= depth; i++){
                 var boxX = boxes[Math.pow(2, i)].position.x;
                 
-                if(boxX + options.width / 2 < x){
+                if(boxX + displayOptions.width / 2 < x){
                     return;
                 }
                 
-                if(boxX - options.width / 2 < x){
+                if(boxX - displayOptions.width / 2 < x){
                     // Is y in range
                     for(var j = Math.pow(2, i - 1); j < Math.pow(2, i); j++){
                         var box1Y = boxes[j * 2].position.y;
                         var box2Y = boxes[j * 2 + 1].position.y;
                         
-                        if(box1Y - options.height / 2 > y){
+                        if(box1Y - displayOptions.height / 2 > y){
                             return;
                         }
                         
-                        if(box2Y + options.height / 2 > y){
+                        if(box2Y + displayOptions.height / 2 > y){
                             var team1 = tournament.names[j * 2];
                             var team2 = tournament.names[j * 2 + 1];
                             
@@ -403,15 +399,15 @@
             paper.setup(canvas);
             
             depth = Math.floor((Math.log(tournament.names.length - 1))/(Math.log(2)));
-            startx = depth * options.width * (options.widthDistance + 1) + options.margin;
-            starty = options.height * options.heightDistance * (Math.pow(2, depth) - 1) + options.header + 1;
+            startx = depth * displayOptions.width * (displayOptions.widthDistance + 1) + displayOptions.margin;
+            starty = displayOptions.height * displayOptions.heightDistance * (Math.pow(2, depth) - 1) + displayOptions.header + 1;
 
             addHeaders();
 
             boxes[1] = new paper.Path(new paper.Point(startx, starty),
-                                      new paper.Point(startx + options.width, starty),
-                                      new paper.Point(startx + options.width, starty + options.height),
-                                      new paper.Point(startx, starty + options.height));
+                                      new paper.Point(startx + displayOptions.width, starty),
+                                      new paper.Point(startx + displayOptions.width, starty + displayOptions.height),
+                                      new paper.Point(startx, starty + displayOptions.height));
             boxes[1].strokeColor = 'black';
             boxes[1].closed = true;
 
@@ -422,7 +418,7 @@
                 depthDistance = Math.floor((Math.log(i))/(Math.log(2)));
 
                 // The difference between the two new boxes
-                ychange = options.height * Math.pow(2, depth - depthDistance - 1) * options.heightDistance;
+                ychange = displayOptions.height * Math.pow(2, depth - depthDistance - 1) * displayOptions.heightDistance;
 
                 // Draw the boxes
                 drawBox(i);
@@ -471,8 +467,8 @@
         });
 
         return {
-            redraw : function(knockoutOptions){
-                options.applyValues(knockoutOptions);
+            redraw : function(displayOptions){
+                displayOptions.applyValues(displayOptions);
                 init();
             },
             

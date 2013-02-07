@@ -6,14 +6,14 @@ $(document).ready(function(){
         fixtures  : [['', ''], ['18/10/2013', '15:00'], ['11/10/2013', '15:00']]
     };
     
-    var knockoutOptions = {
+    var displayOptions = {
         
     };
 
     var knockout = $('#knockout-tournament').knockout({
         teams              : ['Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'],
         knockoutTournament : knockoutTournament,
-        knockoutOptions    : knockoutOptions
+        displayOptions     : displayOptions
     });
     
     $("#create-div").tournamentCreator(knockout);
