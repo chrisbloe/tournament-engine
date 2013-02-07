@@ -2,7 +2,7 @@
     $.fn.knockout = function(knockoutTournament, knockoutOptions){
         
         this.addClass("canvas-container")
-            .append('<canvas class="knockout-canvas"></canvas>')
+            .append($('<canvas/>', {'class':'knockout-canvas'}))
             .hide();
         
         var knockout = new Knockout(this.find(".knockout-canvas"), knockoutTournament, knockoutOptions);
@@ -291,7 +291,6 @@
             var $matchDataContainer = $("#match-data-container");
             var $matchFixtureContainer = $("#match-fixture-container");
             var $matchResultContainer = $("#match-result-container");
-            var $canvas = $("#knockout-canvas");
             
             var $fixtureDate = $("#fixture-date");
             var $fixtureTime = $("#fixture-time");
