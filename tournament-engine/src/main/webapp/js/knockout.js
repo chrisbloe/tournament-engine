@@ -1,4 +1,58 @@
+// jQuery Knockout Tournament plugin :)
+
 ;(function($, paper){
+    
+   /**
+    * This plugin creates a html5 canvas element displaying a knockout tournament.
+    * Tournaments can either be created by providing a list of teams, or an
+    * existing tournament can be displayed.
+    * <br /><br />
+    * Must be applied to a non-self-closing div.
+    *
+    * @author
+    *     Kris Bloe
+    * @param {array} tournamentOptions
+    *     The options, made up of three arrays <b>teams</b>, <b>knockoutTournament</b>
+    *     and [<b>displayOptions</b>]. Either <b>teams</b> or <b>knockoutTournament</b>
+    *     should be given, but not both (if both are provided, <b>teams</b> will be
+    *     ignored.
+    * @return
+    *     {Knockout} The knockout object.
+    * @version
+    *     1 ~ 2013-02-07
+    * @example
+    *     Creating a new random tournament from a group of teams:
+    *     
+    *     $('#knockout-tournament').knockout({
+    *         teams : ['Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool']
+    *     });
+    *     
+    *     Showing an existing knockoutTournament:
+    *     
+    *     $('#knockout-tournament').knockout({
+    *         knockoutTournament : {
+    *             names     : ['', '', 'West Ham', 'Coventry', 'Man Utd', 'West Ham', 'Blackburn', 'Coventry', 'Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'],
+    *             locations : ['', 'Wembley', 'Old Trafford', 'Ewood Park', 'Galpharm Stadium', 'Upton Park', 'Globe Arena', 'Ricoh Arena'],
+    *             scores    : [['', ''], ['', ''], ['1 (1)', '4 (3)'], ['0 (0)', '2 (2)'], ['0 (0)', '0* (0) [2-4]'], ['1* (0) [6-5]', '1 (1)'], ['4 (3)', '5 (4)'], ['4 (1)', '2 (0)']],
+    *             fixtures  : [['', ''], ['18/10/2013', '15:00'], ['11/10/2013', '15:00'], ['', ''], ['', ''], ['', ''], ['', ''], ['', '']]
+    *         }
+    *     });
+    *     
+    *     displayOptions edit the UI:
+    *     
+    *     $('#knockout-tournament').knockout({
+    *         displayOptions : {
+    *             width          : 90,  // The width of each box
+    *             height         : 30,  // The height of each box
+    *             header         : 30,  // The space given for the round headers
+    *             lineLength     : 0.2, // For far between the rounds the lines meet
+    *             widthDistance  : 1.2, // The distance between each round
+    *             heightDistance : 0.9, // The distance between the far left boxes
+    *             fontAllowance  : 5,   // Add fontAllowance so the text isn't covered by the lines
+    *             margin         : 25,  // The extra space given to the right and left of the canvas
+    *         }
+    *     });
+    */
     $.fn.knockout = function(tournamentOptions){
         var $matchFixtureContainer = $('<div/>', {'class':'match-fixture-container', 'hidden':'hidden'})
                                         .append(
@@ -28,6 +82,7 @@
                                     .append($matchFixtureContainer).append($matchResultContainer);
         
         this.addClass("canvas-container")
+            .css({'width': '100%', 'text-align': 'center'})
             .append($('<canvas/>', {'class':'knockout-canvas'}))
             .append($matchDataContainer);
         
@@ -66,7 +121,7 @@
             widthDistance  : 1.2, // The distance between each round
             heightDistance : 0.9, // The distance between the far left boxes
             fontAllowance  : 5,   // Add fontAllowance so the text isn't covered by the lines
-            margin         : 40,
+            margin         : 25,
 
             applyValues    : function(args){
                 Utils.applyValues(args, this);
@@ -454,17 +509,20 @@
         });
         
         $matchDataContainer.dialog({
-            autoOpen  : false,
-            modal     : true,
-            resizable : false,
-            title     : "Edit match...",
-            width     : "auto",
-            buttons   : [{ text  : "Sorted.",
-                          click : function(){
-                                      $(this).dialog("close");
-                                  }
-                       }]
+            autoOpen    : false,
+            modal       : true,
+            resizable   : false,
+            title       : "Edit match...",
+            width       : "auto",
+            dialogClass : "knockout-dialog",
+            buttons     : [{ text  : "Sorted.",
+                             click : function(){
+                                         $(this).dialog("close");
+                                     }
+                          }]
         });
+        
+        $(".knockout-dialog .ui-dialog-titlebar-close").css("visibility", "hidden");
 
         return {
             redraw : function(displayOptions){
