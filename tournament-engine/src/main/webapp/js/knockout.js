@@ -486,6 +486,11 @@
                 init();
             },
             
+            showTournament : function(knockoutTournament){
+                tournament.applyValues(knockoutTournament);
+                init();
+            },
+            
             createRandomTournament : function(teams){
                 tournament.reset();
                 tournament.createRandomTournament(teams);
