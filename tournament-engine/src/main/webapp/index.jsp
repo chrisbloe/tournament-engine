@@ -5,10 +5,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
         
-        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
 <!--        <link rel="stylesheet" href="css/jquery-ui.css">-->
         
-        <link rel="stylesheet" href="css/canvas.css">
+        <link rel="stylesheet" href="css/canvas.css" />
         <title>Canvas demo area</title>
     </head>
     <body>
@@ -30,7 +30,7 @@
             <button id="create-cournament-button">Create knockout tournament</button>
         </div>
         
-        <div id="knockout-tournament" />
+        <div id="knockout-tournament"></div>
         
         <footer>
             <p>&copy; Answer Consulting Ltd. <script>document.write(new Date().getFullYear())</script></p>
