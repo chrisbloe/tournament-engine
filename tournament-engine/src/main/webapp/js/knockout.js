@@ -1,5 +1,5 @@
 ;(function($, paper){
-    $.fn.knockout = function(knockoutTournament, knockoutOptions){
+    $.fn.knockout = function(tournamentOptions){
         var $matchFixtureContainer = $('<div/>', {'class':'match-fixture-container', 'hidden':'hidden'})
                                         .append(
                                             $('<input/>', {'class':'fixture-date', 'placeholder':'Date', 'maxlength':'10'})
@@ -29,10 +29,9 @@
         
         this.addClass("canvas-container")
             .append($('<canvas/>', {'class':'knockout-canvas'}))
-            .append($matchDataContainer)
-            .hide();
+            .append($matchDataContainer);
         
-        var knockout = new Knockout(this, knockoutTournament, knockoutOptions);
+        var knockout = new Knockout(this, tournamentOptions);
         
         new SubmitFixture($matchFixtureContainer, knockout);
         
@@ -79,7 +78,7 @@
         return optionList;
     };
     
-    var KnockoutTournament = function(knockoutTournament){
+    var KnockoutTournament = function(teams, knockoutTournament){
         var tournament = {
             names       : [''],
             locations   : [''],
@@ -87,7 +86,7 @@
             fixtures    : [['', '']],
             headers     : ['Winner', 'Final', 'SF', 'QF'],
             position    : 0,
-
+            
             applyValues : function(args){
                 Utils.applyValues(args, this);
             },
@@ -101,6 +100,15 @@
                 this.names[this.position] = result.winner;
                 this.scores[this.position][0] = result.scores[0];
                 this.scores[this.position][1] = result.scores[1];
+            },
+            
+            reset       : function(){
+                this.names     = [''],
+                this.locations = [''],
+                this.scores    = [['', '']],
+                this.fixtures  = [['', '']],
+                this.headers   = ['Winner', 'Final', 'SF', 'QF'],
+                this.position  = 0
             },
             
             createRandomTournament : function(teams){
@@ -142,12 +150,20 @@
             }
         };
         
-        tournament.applyValues(knockoutTournament);
+        if (knockoutTournament){
+            tournament.applyValues(knockoutTournament);
+        } else {
+            tournament.createRandomTournament(teams);
+        }
         
         return tournament;
     };
     
-    Knockout = function($tournamentContainer, knockoutTournament, knockoutOptions){
+    Knockout = function($tournamentContainer, tournamentOptions){
+        var teams              = tournamentOptions.teams;
+        var knockoutTournament = tournamentOptions.knockoutTournament;
+        var knockoutOptions    = tournamentOptions.knockoutOptions;
+        
         var $matchDataContainer = $tournamentContainer.children(".match-data-container");
         
         var $matchFixtureContainer = $matchDataContainer.children(".match-fixture-container");
@@ -162,7 +178,7 @@
         var $canvas             = $tournamentContainer.children(".knockout-canvas")
         var canvas              = $canvas[0];
         
-        var tournament          = new KnockoutTournament(knockoutTournament);
+        var tournament          = new KnockoutTournament(teams, knockoutTournament);
         var options             = new Options(knockoutOptions);
 
         var depth               = 0;
@@ -471,6 +487,7 @@
             },
             
             createRandomTournament : function(teams){
+                tournament.reset();
                 tournament.createRandomTournament(teams);
                 init();
             }
