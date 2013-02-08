@@ -2,57 +2,63 @@
 
 ;(function($, paper){
     
-   /**
-    * This plugin creates a html5 canvas element displaying a knockout tournament.
-    * Tournaments can either be created by providing a list of teams, or an
-    * existing tournament can be displayed.
-    * <br /><br />
-    * Must be applied to a non-self-closing div.
-    *
-    * @author
-    *     Kris Bloe
-    * @param {array} tournamentOptions
-    *     The options, made up of three arrays <b>teams</b>, <b>knockoutTournament</b>
-    *     and [<b>displayOptions</b>]. Either <b>teams</b> or <b>knockoutTournament</b>
-    *     should be given, but not both (if both are provided, <b>teams</b> will be
-    *     ignored.
-    * @return
-    *     {Knockout} The knockout object.
-    * @version
-    *     1 ~ 2013-02-07
-    * @example
-    *     Creating a new random tournament from a group of teams:
-    *     
-    *     $('#knockout-tournament').knockout({
-    *         teams : ['Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool']
-    *     });
-    *     
-    *     Showing an existing knockoutTournament:
-    *     
-    *     $('#knockout-tournament').knockout({
-    *         knockoutTournament : {
-    *             names     : ['', '', 'West Ham', 'Coventry', 'Man Utd', 'West Ham', 'Blackburn', 'Coventry', 'Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'],
-    *             locations : ['', 'Wembley', 'Old Trafford', 'Ewood Park', 'Galpharm Stadium', 'Upton Park', 'Globe Arena', 'Ricoh Arena'],
-    *             scores    : [['', ''], ['', ''], ['1 (1)', '4 (3)'], ['0 (0)', '2 (2)'], ['0 (0)', '0* (0) [2-4]'], ['1* (0) [6-5]', '1 (1)'], ['4 (3)', '5 (4)'], ['4 (1)', '2 (0)']],
-    *             fixtures  : [['', ''], ['18/10/2013', '15:00'], ['11/10/2013', '15:00'], ['', ''], ['', ''], ['', ''], ['', ''], ['', '']]
-    *         }
-    *     });
-    *     
-    *     displayOptions edit the UI:
-    *     
-    *     $('#knockout-tournament').knockout({
-    *         displayOptions : {
-    *             width          : 90,  // The width of each box
-    *             height         : 30,  // The height of each box
-    *             header         : 30,  // The space given for the round headers
-    *             lineLength     : 0.2, // For far between the rounds the lines meet
-    *             widthDistance  : 1.2, // The distance between each round
-    *             heightDistance : 0.9, // The distance between the far left boxes
-    *             fontAllowance  : 5,   // Add fontAllowance so the text isn't covered by the lines
-    *             margin         : 25,  // The extra space given to the right and left of the canvas
-    *         }
-    *     });
-    */
+    /**
+     * This plugin creates a html5 canvas element displaying a knockout tournament.
+     * Tournaments can either be created by providing a list of teams, or an
+     * existing tournament can be displayed.
+     * 
+     * <br /><br />
+     * 
+     * Must be applied to a non-self-closing div.
+     *
+     * @author
+     *     Kris Bloe
+     *     
+     * @param {array} tournamentOptions
+     *     The options, made up of three arrays <b>teams</b>, <b>knockoutTournament</b>
+     *     and [<b>displayOptions</b>]. Either <b>teams</b> or <b>knockoutTournament</b>
+     *     should be given, but not both (if both are provided, <b>teams</b> will be
+     *     ignored.
+     *     
+     * @return
+     *     {Knockout} The knockout object.
+     *     
+     * @version
+     *     1 ~ 2013-02-07
+     *     
+     * @example
+     *     Creating a new random tournament from a group of teams:
+     *     
+     *     $('#knockout-tournament').knockout({
+     *         teams : ['Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool']
+     *     });
+     *     
+     *     Showing an existing knockoutTournament:
+     *     
+     *     $('#knockout-tournament').knockout({
+     *         knockoutTournament : {
+     *             names     : ['', '', 'West Ham', 'Coventry', 'Man Utd', 'West Ham', 'Blackburn', 'Coventry', 'Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'],
+     *             locations : ['', 'Wembley', 'Old Trafford', 'Ewood Park', 'Galpharm Stadium', 'Upton Park', 'Globe Arena', 'Ricoh Arena'],
+     *             scores    : [['', ''], ['', ''], ['1 (1)', '4 (3)'], ['0 (0)', '2 (2)'], ['0 (0)', '0* (0) [2-4]'], ['1* (0) [6-5]', '1 (1)'], ['4 (3)', '5 (4)'], ['4 (1)', '2 (0)']],
+     *             fixtures  : [['', ''], ['18/10/2013', '15:00'], ['11/10/2013', '15:00'], ['', ''], ['', ''], ['', ''], ['', ''], ['', '']]
+     *         }
+     *     });
+     *     
+     *     displayOptions edit the UI:
+     *     
+     *     $('#knockout-tournament').knockout({
+     *         displayOptions : {
+     *             width          : 90,  // The width of each box
+     *             height         : 30,  // The height of each box
+     *             header         : 30,  // The space given for the round headers
+     *             lineLength     : 0.2, // For far between the rounds the lines meet
+     *             widthDistance  : 1.2, // The distance between each round
+     *             heightDistance : 0.9, // The distance between the far left boxes
+     *             fontAllowance  : 5,   // Add fontAllowance so the text isn't covered by the lines
+     *             margin         : 25,  // The extra space given to the right and left of the canvas
+     *         }
+     *     });
+     */
     $.fn.knockout = function(tournamentOptions){
         var $matchFixtureContainer = $('<div/>', {'class':'match-fixture-container', 'hidden':'hidden'})
                                         .append(
@@ -92,7 +98,11 @@
         
         new SubmitResult($matchResultContainer, knockout);
         
-        return knockout;
+        return {
+                redraw                 : knockout.redraw,
+                showTournament         : knockout.showTournament,
+                createRandomTournament : knockout.createRandomTournament
+         };
     };
     
     var Utils = {
@@ -525,26 +535,109 @@
         $(".knockout-dialog .ui-dialog-titlebar-close").css("visibility", "hidden");
 
         return {
+            
+            /**
+             * Change the UI be defining custom display options.
+             *
+             * @param
+             *     {array} displayOptions
+             * 
+             * @example
+             *     redraw({
+             *         displayOptions : {
+             *             width          : 90,  // The width of each box
+             *             height         : 30,  // The height of each box
+             *             header         : 30,  // The space given for the round headers
+             *             lineLength     : 0.2, // For far between the rounds the lines meet
+             *             widthDistance  : 1.2, // The distance between each round
+             *             heightDistance : 0.9, // The distance between the far left boxes
+             *             fontAllowance  : 5,   // Add fontAllowance so the text isn't covered by the lines
+             *             margin         : 25,  // The extra space given to the right and left of the canvas
+             *         }
+             *     });
+             */
             redraw : function(displayOptions){
                 displayOptions.applyValues(displayOptions);
                 init();
             },
             
-            addFixture : function(result){
-                tournament.addFixture(result);
+            /**
+             * Adds the date and time for the given match. This will only be
+             * displayed if no score has been entered for the match.
+             * 
+             * <br /><br />
+             * 
+             * Note: The location must already be set on the tournament object.
+             * 
+             * @param
+             *     {array} fixture
+             * 
+             * @example
+             *     addFixture({
+             *         fixture : {
+             *             date : "18/10/1986",
+             *             time : "06:16"
+             *         }
+             *     });
+             */
+            addFixture : function(fixture){
+                tournament.addFixture(fixture);
                 init();
             },
             
+            /**
+             * Adds the winner, home and away scores for the given match.
+             * 
+             * <br /><br />
+             * 
+             * Note: The location must already be set on the tournament object.
+             * 
+             * @param
+             *     {array} result
+             * 
+             * @example
+             *     addResult({
+             *         result : {
+             *             winner : "Swindon town",
+             *             scores : [2 (1), 3 (0)]
+             *         }
+             *     });
+             */
             addResult : function(result){
                 tournament.addResult(result);
                 init();
             },
             
+            /**
+             * Creates a tournament from a given set of teams.
+             * 
+             * @param
+             *     {array} knockoutTournament
+             * 
+             * @example
+             *     knockoutTournament : {
+             *         names     : ['', '', 'West Ham', 'Coventry', 'Man Utd', 'West Ham', 'Blackburn', 'Coventry', 'Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'],
+             *         locations : ['', 'Wembley', 'Old Trafford', 'Ewood Park', 'Galpharm Stadium', 'Upton Park', 'Globe Arena', 'Ricoh Arena'],
+             *         scores    : [['', ''], ['', ''], ['1 (1)', '4 (3)'], ['0 (0)', '2 (2)'], ['0 (0)', '0* (0) [2-4]'], ['1* (0) [6-5]', '1 (1)'], ['4 (3)', '5 (4)'], ['4 (1)', '2 (0)']],
+             *         fixtures  : [['', ''], ['18/10/2013', '15:00'], ['11/10/2013', '15:00'], ['', ''], ['', ''], ['', ''], ['', ''], ['', '']]
+             *     }
+             */
             showTournament : function(knockoutTournament){
                 tournament.applyValues(knockoutTournament);
                 init();
             },
             
+            /**
+             * Creates a tournament from a given set of teams.
+             * 
+             * @param
+             *     {array} teams
+             * 
+             * @example
+             *     createRandomTournament({
+             *         teams : ['Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool']
+             *     });
+             */
             createRandomTournament : function(teams){
                 tournament.reset();
                 tournament.createRandomTournament(teams);
