@@ -49,13 +49,10 @@
      *     $('#knockout-tournament').knockout({
      *         displayOptions : {
      *             width          : 90,  // The width of each box
-     *             height         : 30,  // The height of each box
      *             header         : 30,  // The space given for the round headers
      *             lineLength     : 0.2, // For far between the rounds the lines meet
      *             widthDistance  : 1.2, // The distance between each round
-     *             heightDistance : 0.9, // The distance between the far left boxes
-     *             fontAllowance  : 5,   // Add fontAllowance so the text isn't covered by the lines
-     *             margin         : 25,  // The extra space given to the right and left of the canvas
+     *             textSize       : 10,   // Font size
      *         }
      *     });
      */
@@ -106,7 +103,7 @@
     };
     
     var Utils = {
-        applyValues : function(properties,target){
+        applyValues : function(properties, target){
             if(properties){
                 $.each(properties, function(name, value){
                     if(target.hasOwnProperty(name)){
@@ -124,21 +121,37 @@
     
     var DisplayOptions = function(displayOptions){
         var optionList = {
-            width          : 90,
-            height         : 30,
-            header         : 30,
             lineLength     : 0.2,
+            textSize       : 11,  // Font size
+            
+            // TODO
+            header         : 30,
+            width          : 135,
             widthDistance  : 1.2, // The distance between each round
-            heightDistance : 0.9, // The distance between the far left boxes
-            fontAllowance  : 5,   // Add fontAllowance so the text isn't covered by the lines
-            margin         : 25,
+            
+            // Fixed
+            height         : 0, // textSize * 2.6
+            heightDistance : 0, // textSize * 2.6
 
             applyValues    : function(args){
+                if(args.textSize){
+                    args.height = args.textSize * 2.6;
+                    args.heightDistance = args.textSize * 2.6;
+                } else {
+                    args.height = this.height;
+                    args.heightDistance = this.heightDistance;
+                }
+                
                 Utils.applyValues(args, this);
             }
         };
         
-        optionList.applyValues(displayOptions);
+        if(displayOptions){
+            optionList.applyValues(displayOptions);
+        }
+        
+        optionList.height = optionList.textSize * 2.6;
+        optionList.heightDistance = optionList.textSize * 2.6;
         
         return optionList;
     };
@@ -252,19 +265,20 @@
 
         var addHeaders = function(){
             var x = startx + displayOptions.width / 2;
-            var y = displayOptions.header / 2 + displayOptions.fontAllowance;
+            var y = (displayOptions.header + displayOptions.textSize) / 2;
 
             // Add QF, SF, Final and Winner headers
             for(var i = 0; i <= depth && i < tournament.headers.length; i++){
                 var finalsHeader = new paper.PointText(new paper.Point(x, y));
                 finalsHeader.justification = 'center';
                 finalsHeader.content = tournament.headers[i];
+                finalsHeader.characterStyle = { fontSize: displayOptions.textSize };
 
                 // Work from the right, moving left
                 x = x - displayOptions.width * (displayOptions.widthDistance + 1);
             }
 
-            x = displayOptions.margin + displayOptions.width / 2;
+            x = displayOptions.textSize * 2 + displayOptions.width / 2;
             var k = 1;
 
             // Add any previous rounds
@@ -272,6 +286,7 @@
                 var roundHeader = new paper.PointText(new paper.Point(x, y));
                 roundHeader.justification = 'center';
                 roundHeader.content = 'Round ' + k;
+                roundHeader.characterStyle = { fontSize: displayOptions.textSize };
 
                 x = x + displayOptions.width * (displayOptions.widthDistance + 1);
                 k++;
@@ -284,15 +299,16 @@
             boxes[i * 2].position.y -= ychange;
 
             boxes[i * 2 + 1] = boxes[i * 2].clone();
-            boxes[i * 2 + 1].position.y += displayOptions.height * Math.pow(2, depth - depthDistance) * displayOptions.heightDistance;
+            boxes[i * 2 + 1].position.y += Math.pow(2, depth - depthDistance) * displayOptions.heightDistance;
         };
 
         var addText = function(i){
-            var y = boxes[i].position.y + displayOptions.fontAllowance;
+            var y = boxes[i].position.y + displayOptions.textSize / 2;
 
             var participant = new paper.PointText(new paper.Point(boxes[i].position.x, y));
             participant.justification = 'center';
             participant.content = tournament.names[i];
+            participant.characterStyle = { fontSize: displayOptions.textSize };
         };
 
         var addLine = function(i){
@@ -325,31 +341,36 @@
 
         var addLocation = function(i){
             var x = boxes[i].position.x - displayOptions.width * (displayOptions.widthDistance + 1);
-            var y = boxes[i].position.y + displayOptions.fontAllowance;
+            var y = boxes[i].position.y + displayOptions.textSize / 2;
 
             var location = new paper.PointText(new paper.Point(x, y));
             location.justification = 'center';
             location.content = tournament.locations[i];
+            location.characterStyle = { fontSize: displayOptions.textSize };
         };
 
         var addScoreOrFixture = function(i){
-            var x = boxes[i].position.x - displayOptions.widthDistance * displayOptions.width * (1 - displayOptions.lineLength) - displayOptions.width / 2 + displayOptions.fontAllowance;
+            var x = boxes[i].position.x - displayOptions.widthDistance * displayOptions.width * (1 - displayOptions.lineLength) + (displayOptions.textSize - displayOptions.width) / 2;
             var y = boxes[i].position.y;
 
             if((tournament.scores[i] != 'undefined') &&
                (tournament.scores[i][0] != '' && tournament.scores[i][1] != '')){
-                var homeScore = new paper.PointText(new paper.Point(x, y - displayOptions.fontAllowance));
+                var homeScore = new paper.PointText(new paper.Point(x, y - displayOptions.textSize / 2));
                 homeScore.content = tournament.scores[i][0];
+                homeScore.characterStyle = { fontSize: displayOptions.textSize };
 
-                var awayScore = new paper.PointText(new paper.Point(x, y + displayOptions.fontAllowance * 3));
+                var awayScore = new paper.PointText(new paper.Point(x, y + displayOptions.textSize * 3 / 2));
                 awayScore.content = tournament.scores[i][1];
+                awayScore.characterStyle = { fontSize: displayOptions.textSize };
             } else {
                 if(tournament.fixtures[i][0] != 'undefined' && tournament.fixtures[i][1] != 'undefined'){
-                    var fixtureDate = new paper.PointText(new paper.Point(x, y - displayOptions.fontAllowance));
+                    var fixtureDate = new paper.PointText(new paper.Point(x, y - displayOptions.textSize / 2));
                     fixtureDate.content = tournament.fixtures[i][0];
+                    fixtureDate.characterStyle = { fontSize: displayOptions.textSize };
 
-                    var fixtureTime = new paper.PointText(new paper.Point(x, y + displayOptions.fontAllowance * 3));
+                    var fixtureTime = new paper.PointText(new paper.Point(x, y + displayOptions.textSize * 3 / 2));
                     fixtureTime.content = tournament.fixtures[i][1];
+                    fixtureTime.characterStyle = { fontSize: displayOptions.textSize };
                 }
             }
         };
@@ -390,7 +411,7 @@
         var setCanvasDimentions = function(){
             if(boxes[Math.pow(2, depth + 1) - 1]){
                 canvas.height = boxes[Math.pow(2, depth + 1) - 1].position.y + displayOptions.height;
-                canvas.width = 2 * displayOptions.margin + displayOptions.width * (1 + (depth * (displayOptions.widthDistance + 1)));
+                canvas.width = displayOptions.textSize * 4 + displayOptions.width * (1 + (depth * (displayOptions.widthDistance + 1)));
             }
         };
 
@@ -464,8 +485,8 @@
             paper.setup(canvas);
             
             depth = Math.floor((Math.log(tournament.names.length - 1))/(Math.log(2)));
-            startx = depth * displayOptions.width * (displayOptions.widthDistance + 1) + displayOptions.margin;
-            starty = displayOptions.height * displayOptions.heightDistance * (Math.pow(2, depth) - 1) + displayOptions.header + 1;
+            startx = depth * displayOptions.width * (displayOptions.widthDistance + 1) + displayOptions.textSize * 2;
+            starty = displayOptions.heightDistance * (Math.pow(2, depth) - 1) + displayOptions.header + 1;
 
             addHeaders();
 
@@ -483,7 +504,7 @@
                 depthDistance = Math.floor((Math.log(i))/(Math.log(2)));
 
                 // The difference between the two new boxes
-                ychange = displayOptions.height * Math.pow(2, depth - depthDistance - 1) * displayOptions.heightDistance;
+                ychange = Math.pow(2, depth - depthDistance - 1) * displayOptions.heightDistance;
 
                 // Draw the boxes
                 drawBox(i);
@@ -546,13 +567,10 @@
              *     redraw({
              *         displayOptions : {
              *             width          : 90,  // The width of each box
-             *             height         : 30,  // The height of each box
              *             header         : 30,  // The space given for the round headers
              *             lineLength     : 0.2, // For far between the rounds the lines meet
              *             widthDistance  : 1.2, // The distance between each round
-             *             heightDistance : 0.9, // The distance between the far left boxes
-             *             fontAllowance  : 5,   // Add fontAllowance so the text isn't covered by the lines
-             *             margin         : 25,  // The extra space given to the right and left of the canvas
+             *             textSize       : 10,  // Font size
              *         }
              *     });
              */
