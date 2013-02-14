@@ -48,10 +48,8 @@
      *     
      *     $('#knockout-tournament').knockout({
      *         displayOptions : {
-     *             width          : 90,  // The width of each box
      *             header         : 30,  // The space given for the round headers
      *             lineLength     : 0.2, // For far between the rounds the lines meet
-     *             widthDistance  : 1.2, // The distance between each round
      *             textSize       : 10,   // Font size
      *         }
      *     });
@@ -122,24 +120,28 @@
     var DisplayOptions = function(displayOptions){
         var optionList = {
             lineLength     : 0.2,
-            textSize       : 11,  // Font size
+            textSize       : 10,  // Font size
             
             // TODO
             header         : 30,
-            width          : 135,
-            widthDistance  : 1.2, // The distance between each round
             
             // Fixed
             height         : 0, // textSize * 2.6
             heightDistance : 0, // textSize * 2.6
+            width          : 0, // textSize * 9
+            widthDistance  : 0, // textSize * 10
 
             applyValues    : function(args){
                 if(args.textSize){
                     args.height = args.textSize * 2.6;
                     args.heightDistance = args.textSize * 2.6;
+                    args.width = args.textSize * 9;
+                    args.widthDistance = args.textSize * 10;
                 } else {
                     args.height = this.height;
                     args.heightDistance = this.heightDistance;
+                    args.width = this.width;
+                    args.widthDistance = this.widthDistance;
                 }
                 
                 Utils.applyValues(args, this);
@@ -152,6 +154,8 @@
         
         optionList.height = optionList.textSize * 2.6;
         optionList.heightDistance = optionList.textSize * 2.6;
+        optionList.width = optionList.textSize * 9;
+        optionList.widthDistance = optionList.textSize * 10;
         
         return optionList;
     };
@@ -275,7 +279,7 @@
                 finalsHeader.characterStyle = { fontSize: displayOptions.textSize };
 
                 // Work from the right, moving left
-                x = x - displayOptions.width * (displayOptions.widthDistance + 1);
+                x = x - displayOptions.width - displayOptions.widthDistance;
             }
 
             x = displayOptions.textSize * 2 + displayOptions.width / 2;
@@ -288,14 +292,14 @@
                 roundHeader.content = 'Round ' + k;
                 roundHeader.characterStyle = { fontSize: displayOptions.textSize };
 
-                x = x + displayOptions.width * (displayOptions.widthDistance + 1);
+                x = x + displayOptions.width + displayOptions.widthDistance;
                 k++;
             }
         };
 
         var drawBox = function(i){
             boxes[i * 2] = boxes[i].clone();
-            boxes[i * 2].position.x -= displayOptions.width * (displayOptions.widthDistance + 1);
+            boxes[i * 2].position.x -= displayOptions.width + displayOptions.widthDistance;
             boxes[i * 2].position.y -= ychange;
 
             boxes[i * 2 + 1] = boxes[i * 2].clone();
@@ -321,7 +325,7 @@
             //   .       .
             //(x1,y3) (x2,y3)
             var x = boxes[i].position.x - displayOptions.width / 2;
-            var x1 = x - displayOptions.width * displayOptions.widthDistance;
+            var x1 = x - displayOptions.widthDistance;
             var x2 = x1 + displayOptions.lineLength * (x - x1)
 
             var y = boxes[i].position.y - displayOptions.height / 2;
@@ -340,7 +344,7 @@
         };
 
         var addLocation = function(i){
-            var x = boxes[i].position.x - displayOptions.width * (displayOptions.widthDistance + 1);
+            var x = boxes[i].position.x - displayOptions.width - displayOptions.widthDistance;
             var y = boxes[i].position.y + displayOptions.textSize / 2;
 
             var location = new paper.PointText(new paper.Point(x, y));
@@ -350,7 +354,7 @@
         };
 
         var addScoreOrFixture = function(i){
-            var x = boxes[i].position.x - displayOptions.widthDistance * displayOptions.width * (1 - displayOptions.lineLength) + (displayOptions.textSize - displayOptions.width) / 2;
+            var x = boxes[i].position.x - displayOptions.widthDistance * (1 - displayOptions.lineLength) + (displayOptions.textSize - displayOptions.width) / 2;
             var y = boxes[i].position.y;
 
             if((tournament.scores[i] != 'undefined') &&
@@ -411,7 +415,7 @@
         var setCanvasDimentions = function(){
             if(boxes[Math.pow(2, depth + 1) - 1]){
                 canvas.height = boxes[Math.pow(2, depth + 1) - 1].position.y + displayOptions.height;
-                canvas.width = displayOptions.textSize * 4 + displayOptions.width * (1 + (depth * (displayOptions.widthDistance + 1)));
+                canvas.width = depth * (displayOptions.widthDistance + displayOptions.width) + displayOptions.width + displayOptions.textSize * 4;
             }
         };
 
@@ -485,7 +489,7 @@
             paper.setup(canvas);
             
             depth = Math.floor((Math.log(tournament.names.length - 1))/(Math.log(2)));
-            startx = depth * displayOptions.width * (displayOptions.widthDistance + 1) + displayOptions.textSize * 2;
+            startx = depth * (displayOptions.width + displayOptions.widthDistance) + displayOptions.textSize * 2;
             starty = displayOptions.heightDistance * (Math.pow(2, depth) - 1) + displayOptions.header + 1;
 
             addHeaders();
@@ -566,10 +570,8 @@
              * @example
              *     redraw({
              *         displayOptions : {
-             *             width          : 90,  // The width of each box
              *             header         : 30,  // The space given for the round headers
              *             lineLength     : 0.2, // For far between the rounds the lines meet
-             *             widthDistance  : 1.2, // The distance between each round
              *             textSize       : 10,  // Font size
              *         }
              *     });

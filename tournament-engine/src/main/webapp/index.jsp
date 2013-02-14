@@ -74,10 +74,8 @@
                 };
 
                 var displayOptions = {
-                    width         : 90,  // The width of each box
                     header        : 30,  // The space given for the round headers
                     lineLength    : 0.2, // For far between the rounds the lines meet
-                    widthDistance : 1.2, // The distance between each round
                     textSize      : 10
                 };
 
