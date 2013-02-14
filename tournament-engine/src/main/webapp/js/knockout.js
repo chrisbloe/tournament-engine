@@ -49,7 +49,6 @@
      *     
      *     $('#knockout-tournament').knockout({
      *         displayOptions : {
-     *             header         : 30,  // The space given for the round headers
      *             lineLength     : 0.2, // For far between the rounds the lines meet
      *             textSize       : 10,   // Font size
      *         }
@@ -587,7 +586,6 @@
              * @example
              *     redraw({
              *         displayOptions : {
-             *             header         : 30,  // The space given for the round headers
              *             lineLength     : 0.2, // For far between the rounds the lines meet
              *             textSize       : 10,  // Font size
              *         }
