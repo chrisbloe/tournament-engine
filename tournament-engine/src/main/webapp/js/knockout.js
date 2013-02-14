@@ -37,6 +37,7 @@
      *     
      *     $('#knockout-tournament').knockout({
      *         knockoutTournament : {
+     *             title     : "This is my frikkin' awesome tournament 2!",
      *             names     : ['', '', 'West Ham', 'Coventry', 'Man Utd', 'West Ham', 'Blackburn', 'Coventry', 'Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'],
      *             locations : ['', 'Wembley', 'Old Trafford', 'Ewood Park', 'Galpharm Stadium', 'Upton Park', 'Globe Arena', 'Ricoh Arena'],
      *             scores    : [['', ''], ['', ''], ['1 (1)', '4 (3)'], ['0 (0)', '2 (2)'], ['0 (0)', '0* (0) [2-4]'], ['1* (0) [6-5]', '1 (1)'], ['4 (3)', '5 (4)'], ['4 (1)', '2 (0)']],
@@ -122,9 +123,6 @@
             lineLength     : 0.2,
             textSize       : 10,  // Font size
             
-            // TODO
-            header         : 30,
-            
             // Fixed
             border         : 0, // textSize * 2
             height         : 0, // textSize * 2.6
@@ -166,6 +164,7 @@
     
     var KnockoutTournament = function(teams, knockoutTournament){
         var tournament = {
+            title       : "",
             names       : [''],
             locations   : [''],
             scores      : [['', '']],
@@ -271,16 +270,26 @@
 
         var boxes               = new Array(); // required
 
+        var addTitle = function(){
+            var x = canvas.width / 2;
+            var y = displayOptions.border;
+            
+            var finalsHeader = new paper.PointText(new paper.Point(x, y));
+            finalsHeader.justification = 'center';
+            finalsHeader.content = tournament.title;
+            finalsHeader.characterStyle = { fontSize: displayOptions.textSize * 2 };
+        };
+
         var addHeaders = function(){
             var x = startx + displayOptions.width / 2;
-            var y = (displayOptions.header + displayOptions.textSize) / 2;
+            var y = displayOptions.border * 2.5;
 
             // Add QF, SF, Final and Winner headers
             for(var i = 0; i <= depth && i < tournament.headers.length; i++){
                 var finalsHeader = new paper.PointText(new paper.Point(x, y));
                 finalsHeader.justification = 'center';
                 finalsHeader.content = tournament.headers[i];
-                finalsHeader.characterStyle = { fontSize: displayOptions.textSize };
+                finalsHeader.characterStyle = { fontSize: displayOptions.textSize * 1.2 };
 
                 // Work from the right, moving left
                 x = x - displayOptions.width - displayOptions.widthDistance;
@@ -424,11 +433,13 @@
         };
 
         var drawCanvasOutline = function(){
-            new paper.Path(new paper.Point(1, 1),
-                           new paper.Point(canvas.width - 1, 1),
+            var maxHeight = displayOptions.border * 1.5;
+            
+            new paper.Path(new paper.Point(1, maxHeight),
+                           new paper.Point(canvas.width - 1, maxHeight),
                            new paper.Point(canvas.width - 1, canvas.height - 1),
                            new paper.Point(1, canvas.height - 1),
-                           new paper.Point(1, 1))
+                           new paper.Point(1, maxHeight))
                      .strokeColor = 'black';
         };
         
@@ -494,8 +505,8 @@
             
             depth = Math.floor((Math.log(tournament.names.length - 1))/(Math.log(2)));
             startx = depth * (displayOptions.width + displayOptions.widthDistance) + displayOptions.border;
-            starty = displayOptions.heightDistance * (Math.pow(2, depth) - 1) + displayOptions.header + 1;
-
+            starty = displayOptions.heightDistance * (Math.pow(2, depth) - 1) + displayOptions.border * 3;
+            
             addHeaders();
 
             boxes[1] = new paper.Path(new paper.Point(startx, starty),
@@ -535,6 +546,8 @@
             addSuccessColors();
             
             setCanvasDimentions();
+            
+            addTitle();
             
             drawCanvasOutline();
             
@@ -640,6 +653,7 @@
              * 
              * @example
              *     knockoutTournament : {
+             *         title     : "This is my frikkin' awesome tournament 2!",
              *         names     : ['', '', 'West Ham', 'Coventry', 'Man Utd', 'West Ham', 'Blackburn', 'Coventry', 'Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'],
              *         locations : ['', 'Wembley', 'Old Trafford', 'Ewood Park', 'Galpharm Stadium', 'Upton Park', 'Globe Arena', 'Ricoh Arena'],
              *         scores    : [['', ''], ['', ''], ['1 (1)', '4 (3)'], ['0 (0)', '2 (2)'], ['0 (0)', '0* (0) [2-4]'], ['1* (0) [6-5]', '1 (1)'], ['4 (3)', '5 (4)'], ['4 (1)', '2 (0)']],
