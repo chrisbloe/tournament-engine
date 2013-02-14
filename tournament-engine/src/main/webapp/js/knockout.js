@@ -126,6 +126,7 @@
             header         : 30,
             
             // Fixed
+            border         : 0, // textSize * 2
             height         : 0, // textSize * 2.6
             heightDistance : 0, // textSize * 2.6
             width          : 0, // textSize * 9
@@ -133,11 +134,13 @@
 
             applyValues    : function(args){
                 if(args.textSize){
+                    args.border = args.textSize * 2;
                     args.height = args.textSize * 2.6;
                     args.heightDistance = args.textSize * 2.6;
                     args.width = args.textSize * 9;
                     args.widthDistance = args.textSize * 10;
                 } else {
+                    args.border = this.border;
                     args.height = this.height;
                     args.heightDistance = this.heightDistance;
                     args.width = this.width;
@@ -152,6 +155,7 @@
             optionList.applyValues(displayOptions);
         }
         
+        optionList.border = optionList.textSize * 2;
         optionList.height = optionList.textSize * 2.6;
         optionList.heightDistance = optionList.textSize * 2.6;
         optionList.width = optionList.textSize * 9;
@@ -414,8 +418,8 @@
 
         var setCanvasDimentions = function(){
             if(boxes[Math.pow(2, depth + 1) - 1]){
-                canvas.height = boxes[Math.pow(2, depth + 1) - 1].position.y + displayOptions.height;
-                canvas.width = depth * (displayOptions.widthDistance + displayOptions.width) + displayOptions.width + displayOptions.textSize * 4;
+                canvas.height = boxes[Math.pow(2, depth + 1) - 1].position.y + displayOptions.height / 2 + displayOptions.border;
+                canvas.width = depth * (displayOptions.widthDistance + displayOptions.width) + displayOptions.width + displayOptions.border * 2;
             }
         };
 
@@ -489,7 +493,7 @@
             paper.setup(canvas);
             
             depth = Math.floor((Math.log(tournament.names.length - 1))/(Math.log(2)));
-            startx = depth * (displayOptions.width + displayOptions.widthDistance) + displayOptions.textSize * 2;
+            startx = depth * (displayOptions.width + displayOptions.widthDistance) + displayOptions.border;
             starty = displayOptions.heightDistance * (Math.pow(2, depth) - 1) + displayOptions.header + 1;
 
             addHeaders();
