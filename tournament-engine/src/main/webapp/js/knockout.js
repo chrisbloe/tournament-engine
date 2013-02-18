@@ -23,8 +23,7 @@
      * @return
      *     {Knockout} The knockout object.
      *     
-     * @version
-     *     1 ~ 2013-02-07
+     * @version 1 ~ 2013-02-07
      *     
      * @example
      *     Creating a new random tournament from a group of teams:
@@ -112,7 +111,7 @@
         },
 
         shuffle : function(arr){
-            for(var j, x, i = arr.length; i; j = parseInt(Math.random() * i), x = arr[--i], arr[i] = arr[j], arr[j] = x);
+            for(var j, x, i = arr.length; i; j = parseInt(Math.random() * i), x = arr[--i], arr[i] = arr[j], arr[j] = x){};
             return arr;
         }
     };
@@ -206,7 +205,7 @@
                     this.names[position] = '';
                 }
                 
-                var firstRound = new Array();
+                var firstRound = [];
                 
                 // Add teams to an array big enough for the first round
                 for(var i = 0; i < Math.pow(2, maxDepth); i++){
@@ -267,7 +266,7 @@
         var depthDistance       = 0;
         var ychange             = 0;
 
-        var boxes               = new Array(); // required
+        var boxes               = []; // required
 
         var addTitle = function(){
             var x = canvas.width / 2;

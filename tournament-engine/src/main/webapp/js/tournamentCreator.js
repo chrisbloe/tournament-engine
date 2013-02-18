@@ -44,7 +44,7 @@
             // We have to put the whole options array into a new array, because
             // the options array doesn't support all of the Array methods (like sort)
             // Doesn't that suck?
-            var options = new Array();
+            var options = [];
 
             for(var i = 0; i < element.options.length; i++){
                 options.push(element.options[i]);
