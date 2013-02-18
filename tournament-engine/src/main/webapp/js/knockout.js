@@ -25,7 +25,6 @@
             lineLength     : 0.2,
             textSize       : 10,  // Font size
             
-            // Fixed
             border         : 0, // textSize * 2
             height         : 0, // textSize * 2.6
             heightDistance : 0, // textSize * 2.6
