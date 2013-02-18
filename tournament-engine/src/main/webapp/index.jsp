@@ -37,7 +37,7 @@
         </footer>
         
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-        <script src="http://code.jquery.com/jquery-migrate-1.1.0.min.js"></script>
+        <script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
         <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/vendor/jquery.js"></script>
         <script type="text/javascript" src="js/vendor/jquery-ui.js"></script>
