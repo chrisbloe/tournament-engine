@@ -1,12 +1,9 @@
 ;(function($){
     $.fn.tournamentCreator = function(knockout){
         new TournamentCreator(knockout);
-    }
+    };
     
     var TournamentCreator = function(knockout){
-        var $createDiv = $("#create-div");
-        var $knockoutTournament = $("#knockout-tournament");
-
         var $newTeam = $("#new-team");
         var $addTeamButton = $("#add-team-button");
         var $currentTeams = $('#current-teams');
@@ -73,6 +70,6 @@
                                                 options[i].defaultSelected, 
                                                 options[i].selected);
             }
-        }
-    }
+        };
+    };
 })(jQuery);

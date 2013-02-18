@@ -192,7 +192,7 @@
                 this.scores    = [['', '']],
                 this.fixtures  = [['', '']],
                 this.headers   = ['Winner', 'Final', 'SF', 'QF'],
-                this.position  = 0
+                this.position  = 0;
             },
             
             createRandomTournament : function(teams){
@@ -255,7 +255,7 @@
         var $homeScore = $matchResultContainer.children(".home-score");
         var $awayScore = $matchResultContainer.children(".away-score");
         
-        var $canvas             = $tournamentContainer.children(".knockout-canvas")
+        var $canvas             = $tournamentContainer.children(".knockout-canvas");
         var canvas              = $canvas[0];
         
         var tournament          = new KnockoutTournament(tournamentOptions.teams, tournamentOptions.knockoutTournament);
@@ -338,7 +338,7 @@
             //(x1,y3) (x2,y3)
             var x = boxes[i].position.x - displayOptions.width / 2;
             var x1 = x - displayOptions.widthDistance;
-            var x2 = x1 + displayOptions.lineLength * (x - x1)
+            var x2 = x1 + displayOptions.lineLength * (x - x1);
 
             var y = boxes[i].position.y - displayOptions.height / 2;
             var y1 = y + displayOptions.height / 2 - ychange;
@@ -369,8 +369,8 @@
             var x = boxes[i].position.x - displayOptions.widthDistance * (1 - displayOptions.lineLength) + (displayOptions.textSize - displayOptions.width) / 2;
             var y = boxes[i].position.y;
 
-            if((tournament.scores[i] != 'undefined') &&
-               (tournament.scores[i][0] != '' && tournament.scores[i][1] != '')){
+            if((tournament.scores[i] !== 'undefined') &&
+               (tournament.scores[i][0] !== '' && tournament.scores[i][1] !== '')){
                 var homeScore = new paper.PointText(new paper.Point(x, y - displayOptions.textSize / 2));
                 homeScore.content = tournament.scores[i][0];
                 homeScore.characterStyle = { fontSize: displayOptions.textSize };
@@ -379,7 +379,7 @@
                 awayScore.content = tournament.scores[i][1];
                 awayScore.characterStyle = { fontSize: displayOptions.textSize };
             } else {
-                if(tournament.fixtures[i][0] != 'undefined' && tournament.fixtures[i][1] != 'undefined'){
+                if(tournament.fixtures[i][0] !== 'undefined' && tournament.fixtures[i][1] !== 'undefined'){
                     var fixtureDate = new paper.PointText(new paper.Point(x, y - displayOptions.textSize / 2));
                     fixtureDate.content = tournament.fixtures[i][0];
                     fixtureDate.characterStyle = { fontSize: displayOptions.textSize };
@@ -396,11 +396,11 @@
             var minPosition = Math.pow(2, maxDepth - 1);
             
             for(var i = minPosition - 1; i > 0; i--){
-                if(tournament.names[i * 2] == '-'){
+                if(tournament.names[i * 2] === '-'){
                     tournament.names[i] = tournament.names[i * 2 + 1];
                     addText(i);
                 } else {
-                    if(tournament.names[i * 2 + 1] == '-'){
+                    if(tournament.names[i * 2 + 1] === '-'){
                         tournament.names[i] = tournament.names[i * 2];
                         addText(i);
                     }
@@ -412,12 +412,12 @@
             for(var i = 1; i < Math.pow(2, depth); i++){
                 var winningTeam = tournament.names[i];
                 
-                if(winningTeam != '' && winningTeam != '-'){
-                    if(winningTeam == tournament.names[i * 2]){
+                if(winningTeam !== '' && winningTeam !== '-'){
+                    if(winningTeam === tournament.names[i * 2]){
                         boxes[i * 2].strokeColor = 'green';
                     }
 
-                    if(winningTeam == tournament.names[i * 2 + 1]){
+                    if(winningTeam === tournament.names[i * 2 + 1]){
                         boxes[i * 2 + 1].strokeColor = 'green';
                     }
                 }
@@ -446,8 +446,8 @@
             $matchFixtureContainer.hide();
             $matchResultContainer.hide();
             
-            var x = event.pageX - $canvas.offset().left
-            var y = event.pageY - $canvas.offset().top
+            var x = event.pageX - $canvas.offset().left;
+            var y = event.pageY - $canvas.offset().top;
             
             // Is x in range
             for(var i = 1; i <= depth; i++){
@@ -471,7 +471,7 @@
                             var team1 = tournament.names[j * 2];
                             var team2 = tournament.names[j * 2 + 1];
                             
-                            if(team1 != "-" && team2 != "-"){
+                            if(team1 !== "-" && team2 !== "-"){
                                 $matchDataContainer.dialog("open");
                                 
                                 tournament.position = j;
@@ -479,7 +479,7 @@
                                 $fixtureDate.val(tournament.fixtures[j][0]);
                                 $fixtureTime.val(tournament.fixtures[j][1]);
                                 
-                                if(team1 != "" && team2 != ""){
+                                if(team1 !== "" && team2 !== ""){
                                     $winner.empty();
                                     $winner.append(new Option("Winner", ""));
                                     $winner.append(new Option(team1, team1));
@@ -497,7 +497,7 @@
                     return;
                 }
             }
-        }
+        };
 
         var init = function(){
             paper.setup(canvas);
@@ -551,7 +551,7 @@
             drawCanvasOutline();
             
             paper.view.draw();
-        }
+        };
         
         init();
         
@@ -680,7 +680,7 @@
                 init();
             }
         };
-    }
+    };
     
                             ///////////
                             // Views //
