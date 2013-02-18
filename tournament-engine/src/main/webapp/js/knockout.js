@@ -1,103 +1,7 @@
 // jQuery Knockout Tournament plugin :)
 
 ;(function($, paper){
-    
-    /**
-     * This plugin creates a html5 canvas element displaying a knockout tournament.
-     * Tournaments can either be created by providing a list of teams, or an
-     * existing tournament can be displayed.
-     * 
-     * <br /><br />
-     * 
-     * Must be applied to a non-self-closing div.
-     *
-     * @author
-     *     Kris Bloe
-     *     
-     * @param {array} tournamentOptions
-     *     The options, made up of three arrays <b>teams</b>, <b>knockoutTournament</b>
-     *     and [<b>displayOptions</b>]. Either <b>teams</b> or <b>knockoutTournament</b>
-     *     should be given, but not both (if both are provided, <b>teams</b> will be
-     *     ignored.
-     *     
-     * @return
-     *     {Knockout} The knockout object.
-     *     
-     * @version 1 ~ 2013-02-07
-     *     
-     * @example
-     *     Creating a new random tournament from a group of teams:
-     *     
-     *     $('#knockout-tournament').knockout({
-     *         teams : ['Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool']
-     *     });
-     *     
-     *     Showing an existing knockoutTournament:
-     *     
-     *     $('#knockout-tournament').knockout({
-     *         knockoutTournament : {
-     *             title     : "This is my frikkin' awesome tournament 2!",
-     *             names     : ['', '', 'West Ham', 'Coventry', 'Man Utd', 'West Ham', 'Blackburn', 'Coventry', 'Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'],
-     *             locations : ['', 'Wembley', 'Old Trafford', 'Ewood Park', 'Galpharm Stadium', 'Upton Park', 'Globe Arena', 'Ricoh Arena'],
-     *             scores    : [['', ''], ['', ''], ['1 (1)', '4 (3)'], ['0 (0)', '2 (2)'], ['0 (0)', '0* (0) [2-4]'], ['1* (0) [6-5]', '1 (1)'], ['4 (3)', '5 (4)'], ['4 (1)', '2 (0)']],
-     *             fixtures  : [['', ''], ['18/10/2013', '15:00'], ['11/10/2013', '15:00'], ['', ''], ['', ''], ['', ''], ['', ''], ['', '']]
-     *         }
-     *     });
-     *     
-     *     displayOptions edit the UI:
-     *     
-     *     $('#knockout-tournament').knockout({
-     *         displayOptions : {
-     *             lineLength     : 0.2, // For far between the rounds the lines meet
-     *             textSize       : 10,   // Font size
-     *         }
-     *     });
-     */
-    $.fn.knockout = function(tournamentOptions){
-        var $matchFixtureContainer = $('<div/>', {'class':'match-fixture-container', 'hidden':'hidden'})
-                                        .append(
-                                            $('<input/>', {'class':'fixture-date', 'placeholder':'Date', 'maxlength':'10'})
-                                        ).append(
-                                            $('<br/>')
-                                        ).append(
-                                            $('<input/>', {'class':'fixture-time', 'type':'time'})
-                                        );
-        
-        var $matchResultContainer = $('<div/>', {'class':'match-result-container', 'hidden':'hidden'})
-                                        .append(
-                                            $('<br/>')
-                                        ).append(
-                                            $('<select/>', {'class':'winner'})
-                                        ).append(
-                                            $('<br/>')
-                                        ).append(
-                                            $('<input/>', {'class':'home-score', 'placeholder':'Home score'})
-                                        ).append(
-                                            $('<br/>')
-                                        ).append(
-                                            $('<input/>', {'class':'away-score', 'placeholder':'Away score'})
-                                        );
-        
-        var $matchDataContainer = $('<div/>', {'class':'match-data-container'})
-                                    .append($matchFixtureContainer).append($matchResultContainer);
-        
-        this.addClass("canvas-container")
-            .css({'width': '100%', 'text-align': 'center'})
-            .append($('<canvas/>', {'class':'knockout-canvas'}))
-            .append($matchDataContainer);
-        
-        var knockout = new Knockout(this, tournamentOptions);
-        
-        new SubmitFixture($matchFixtureContainer, knockout);
-        
-        new SubmitResult($matchResultContainer, knockout);
-        
-        return {
-                redraw                 : knockout.redraw,
-                showTournament         : knockout.showTournament,
-                createRandomTournament : knockout.createRandomTournament
-         };
-    };
+    "use strict";
     
     var Utils = {
         applyValues : function(properties, target){
@@ -242,7 +146,7 @@
         return tournament;
     };
     
-    Knockout = function($tournamentContainer, tournamentOptions){
+    var Knockout = function($tournamentContainer, tournamentOptions){
         var $matchDataContainer = $tournamentContainer.children(".match-data-container");
         
         var $matchFixtureContainer = $matchDataContainer.children(".match-fixture-container");
@@ -685,7 +589,7 @@
                             // Views //
                             ///////////
     
-    SubmitResult = function($matchResultContainer, knockout){
+    var SubmitResult = function($matchResultContainer, knockout){
         var $winner = $matchResultContainer.children(".winner");
         var $homeScore = $matchResultContainer.children(".home-score");
         var $awayScore = $matchResultContainer.children(".away-score");
@@ -712,7 +616,7 @@
         });
     };
     
-    SubmitFixture = function($matchFixtureContainer, knockout){
+    var SubmitFixture = function($matchFixtureContainer, knockout){
         var $fixtureDate = $matchFixtureContainer.children(".fixture-date");
         var $fixtureTime = $matchFixtureContainer.children(".fixture-time");
         
@@ -737,5 +641,102 @@
         $fixtureTime.on('change paste textInput input', function(){
             updateFixture();
         });
+    };
+    
+    /**
+     * This plugin creates a html5 canvas element displaying a knockout tournament.
+     * Tournaments can either be created by providing a list of teams, or an
+     * existing tournament can be displayed.
+     * 
+     * <br /><br />
+     * 
+     * Must be applied to a non-self-closing div.
+     *
+     * @author
+     *     Kris Bloe
+     *     
+     * @param {array} tournamentOptions
+     *     The options, made up of three arrays <b>teams</b>, <b>knockoutTournament</b>
+     *     and [<b>displayOptions</b>]. Either <b>teams</b> or <b>knockoutTournament</b>
+     *     should be given, but not both (if both are provided, <b>teams</b> will be
+     *     ignored.
+     *     
+     * @return
+     *     {Knockout} The knockout object.
+     *     
+     * @version 1 ~ 2013-02-07
+     *     
+     * @example
+     *     Creating a new random tournament from a group of teams:
+     *     
+     *     $('#knockout-tournament').knockout({
+     *         teams : ['Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool']
+     *     });
+     *     
+     *     Showing an existing knockoutTournament:
+     *     
+     *     $('#knockout-tournament').knockout({
+     *         knockoutTournament : {
+     *             title     : "This is my frikkin' awesome tournament 2!",
+     *             names     : ['', '', 'West Ham', 'Coventry', 'Man Utd', 'West Ham', 'Blackburn', 'Coventry', 'Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'],
+     *             locations : ['', 'Wembley', 'Old Trafford', 'Ewood Park', 'Galpharm Stadium', 'Upton Park', 'Globe Arena', 'Ricoh Arena'],
+     *             scores    : [['', ''], ['', ''], ['1 (1)', '4 (3)'], ['0 (0)', '2 (2)'], ['0 (0)', '0* (0) [2-4]'], ['1* (0) [6-5]', '1 (1)'], ['4 (3)', '5 (4)'], ['4 (1)', '2 (0)']],
+     *             fixtures  : [['', ''], ['18/10/2013', '15:00'], ['11/10/2013', '15:00'], ['', ''], ['', ''], ['', ''], ['', ''], ['', '']]
+     *         }
+     *     });
+     *     
+     *     displayOptions edit the UI:
+     *     
+     *     $('#knockout-tournament').knockout({
+     *         displayOptions : {
+     *             lineLength     : 0.2, // For far between the rounds the lines meet
+     *             textSize       : 10,   // Font size
+     *         }
+     *     });
+     */
+    $.fn.knockout = function(tournamentOptions){
+        var $matchFixtureContainer = $('<div/>', {'class':'match-fixture-container', 'hidden':'hidden'})
+                                        .append(
+                                            $('<input/>', {'class':'fixture-date', 'placeholder':'Date', 'maxlength':'10'})
+                                        ).append(
+                                            $('<br/>')
+                                        ).append(
+                                            $('<input/>', {'class':'fixture-time', 'type':'time'})
+                                        );
+        
+        var $matchResultContainer = $('<div/>', {'class':'match-result-container', 'hidden':'hidden'})
+                                        .append(
+                                            $('<br/>')
+                                        ).append(
+                                            $('<select/>', {'class':'winner'})
+                                        ).append(
+                                            $('<br/>')
+                                        ).append(
+                                            $('<input/>', {'class':'home-score', 'placeholder':'Home score'})
+                                        ).append(
+                                            $('<br/>')
+                                        ).append(
+                                            $('<input/>', {'class':'away-score', 'placeholder':'Away score'})
+                                        );
+        
+        var $matchDataContainer = $('<div/>', {'class':'match-data-container'})
+                                    .append($matchFixtureContainer).append($matchResultContainer);
+        
+        this.addClass("canvas-container")
+            .css({'width': '100%', 'text-align': 'center'})
+            .append($('<canvas/>', {'class':'knockout-canvas'}))
+            .append($matchDataContainer);
+        
+        var knockout = new Knockout(this, tournamentOptions);
+        
+        new SubmitFixture($matchFixtureContainer, knockout);
+        
+        new SubmitResult($matchResultContainer, knockout);
+        
+        return {
+                redraw                 : knockout.redraw,
+                showTournament         : knockout.showTournament,
+                createRandomTournament : knockout.createRandomTournament
+         };
     };
 })(jQuery, paper);
