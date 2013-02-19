@@ -187,7 +187,11 @@
 
         var addHeaders = function(){
             var x = startx + displayOptions.width / 2;
-            var y = displayOptions.border + displayOptions.titleHeight;
+            var y = displayOptions.border;
+            
+            if(tournament.title !== ''){
+                y += displayOptions.titleHeight;
+            }
 
             // Add QF, SF, Final and Winner headers
             for(var i = 0; i <= depth && i < tournament.headers.length; i++){
@@ -338,7 +342,9 @@
         };
 
         var drawCanvasOutline = function(){
-            var maxHeight = displayOptions.titleHeight;
+            var maxHeight = tournament.title !== ''
+                          ? displayOptions.titleHeight
+                          : 1;
             
             new paper.Path(new paper.Point(1, maxHeight),
                            new paper.Point(canvas.width - 1, maxHeight),
@@ -410,7 +416,11 @@
             
             depth = Math.floor((Math.log(tournament.names.length - 1))/(Math.log(2)));
             startx = depth * (displayOptions.width + displayOptions.widthDistance) + displayOptions.border;
-            starty = displayOptions.heightDistance * (Math.pow(2, depth) - 1) + displayOptions.border * 1.5 + displayOptions.titleHeight;
+            starty = displayOptions.heightDistance * (Math.pow(2, depth) - 1) + displayOptions.border * 1.5;
+            
+            if(tournament.title !== ''){
+                starty += displayOptions.titleHeight;
+            }
             
             addHeaders();
 
@@ -452,7 +462,9 @@
             
             setCanvasDimentions();
             
-            addTitle();
+            if(tournament.title !== ''){
+                addTitle();
+            }
             
             drawCanvasOutline();
             
