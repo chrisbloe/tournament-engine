@@ -59,7 +59,7 @@
         <div id="knockout-tournament"></div>
         
         <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-        <script type="text/javascript" src="http://code.jquery.com/ui/1.10.0/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/ui/1.10.1/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/vendor/paper.js"></script>
         <script type="text/javascript" src="js/knockout.js"></script>
         <script type="text/javascript">

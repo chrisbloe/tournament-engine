@@ -26,6 +26,7 @@
             textSize       : 10,  // Font size
             
             border         : 0, // textSize * 2
+            titleHeight    : 0, // border * 1.5
             height         : 0, // textSize * 2.6
             heightDistance : 0, // textSize * 2.6
             width          : 0, // textSize * 9
@@ -34,12 +35,14 @@
             applyValues    : function(args){
                 if(args.textSize){
                     args.border = args.textSize * 2;
+                    args.titleHeight = args.border * 1.5;
                     args.height = args.textSize * 2.6;
                     args.heightDistance = args.textSize * 2.6;
                     args.width = args.textSize * 9;
                     args.widthDistance = args.textSize * 10;
                 } else {
                     args.border = this.border;
+                    args.titleHeight = this.titleHeight;
                     args.height = this.height;
                     args.heightDistance = this.heightDistance;
                     args.width = this.width;
@@ -55,6 +58,7 @@
         }
         
         optionList.border = optionList.textSize * 2;
+        optionList.titleHeight = optionList.border * 1.5;
         optionList.height = optionList.textSize * 2.6;
         optionList.heightDistance = optionList.textSize * 2.6;
         optionList.width = optionList.textSize * 9;
@@ -173,7 +177,7 @@
 
         var addTitle = function(){
             var x = canvas.width / 2;
-            var y = displayOptions.border;
+            var y = displayOptions.titleHeight / 2 + displayOptions.textSize / 2;
             
             var finalsHeader = new paper.PointText(new paper.Point(x, y));
             finalsHeader.justification = 'center';
@@ -183,7 +187,7 @@
 
         var addHeaders = function(){
             var x = startx + displayOptions.width / 2;
-            var y = displayOptions.border * 2.5;
+            var y = displayOptions.border + displayOptions.titleHeight;
 
             // Add QF, SF, Final and Winner headers
             for(var i = 0; i <= depth && i < tournament.headers.length; i++){
@@ -334,7 +338,7 @@
         };
 
         var drawCanvasOutline = function(){
-            var maxHeight = displayOptions.border * 1.5;
+            var maxHeight = displayOptions.titleHeight;
             
             new paper.Path(new paper.Point(1, maxHeight),
                            new paper.Point(canvas.width - 1, maxHeight),
@@ -406,7 +410,7 @@
             
             depth = Math.floor((Math.log(tournament.names.length - 1))/(Math.log(2)));
             startx = depth * (displayOptions.width + displayOptions.widthDistance) + displayOptions.border;
-            starty = displayOptions.heightDistance * (Math.pow(2, depth) - 1) + displayOptions.border * 3;
+            starty = displayOptions.heightDistance * (Math.pow(2, depth) - 1) + displayOptions.border * 1.5 + displayOptions.titleHeight;
             
             addHeaders();
 
