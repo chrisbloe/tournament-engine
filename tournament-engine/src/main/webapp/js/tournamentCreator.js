@@ -31,7 +31,7 @@
                 teams[i] = $(option).text();
             });
             
-            knockout.createRandomTournament(teams);
+            knockout.createRandomTournament("Test title", teams);
         });
 
        /**

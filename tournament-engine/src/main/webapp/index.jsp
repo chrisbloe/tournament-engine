@@ -1,11 +1,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<!--<html>
+<html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <link rel="icon" type="image/x-icon" href="favicon.ico" />
         
-        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
         <link rel="stylesheet" href="css/jquery-ui.css">
         
         <link rel="stylesheet" href="css/canvas.css" />
@@ -33,23 +32,23 @@
         <div id="knockout-tournament"></div>
         
         <footer>
-            <p>&copy; Answer Consulting Ltd. <script>document.write(new Date().getFullYear())</script></p>
+            <p>&copy; Answer Consulting Ltd. <script>document.write(new Date().getFullYear());</script></p>
         </footer>
         
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
         <script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
         <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="js/vendor/jquery.js"></script>
-        <script type="text/javascript" src="js/vendor/jquery-ui.js"></script>
+<!--        <script type="text/javascript" src="js/vendor/jquery.js"></script>
+        <script type="text/javascript" src="js/vendor/jquery-ui.js"></script>-->
         
         <script type="text/javascript" src="js/vendor/paper.js"></script>
         <script type="text/javascript" src="js/knockout.js"></script>
         <script type="text/javascript" src="js/tournamentCreator.js"></script>
         <script type="text/javascript" src="js/myCanvas.js"></script>
     </body>
-</html>-->
+</html>
 
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -80,11 +79,11 @@
                 };
 
                 var knockout = $('#knockout-tournament').knockout({
-//                    teams              : teams,
+                    teams              : teams,
                     knockoutTournament : knockoutTournament
-//                    displayOptions     : displayOptions
+                    displayOptions     : displayOptions
                 });
             });
         </script>
     </body>
-</html>
+</html>-->

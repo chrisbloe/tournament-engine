@@ -1,4 +1,6 @@
 // jQuery Knockout Tournament plugin :)
+//
+// Version 1 20/02/2013-1
 
 ;(function($, paper){
     "use strict";
@@ -101,7 +103,9 @@
                 this.position  = 0;
             },
             
-            createRandomTournament : function(teams){
+            createRandomTournament : function(title, teams){
+                this.title = title;
+                
                 var maxDepth = Math.ceil((Math.log(teams.length))/(Math.log(2)));
                 
                 var minPosition = Math.pow(2, maxDepth);
@@ -143,7 +147,7 @@
         if (knockoutTournament){
             tournament.applyValues(knockoutTournament);
         } else {
-            tournament.createRandomTournament(teams);
+            tournament.createRandomTournament(this.title, teams);
         }
         
         return tournament;
@@ -585,16 +589,19 @@
              * Creates a tournament from a given set of teams.
              * 
              * @param
+             *     {string} title
+             * @param
              *     {array} teams
              * 
              * @example
              *     createRandomTournament({
+             *         title : "Test title",
              *         teams : ['Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool']
              *     });
              */
-            createRandomTournament : function(teams){
+            createRandomTournament : function(title, teams){
                 tournament.reset();
-                tournament.createRandomTournament(teams);
+                tournament.createRandomTournament(title, teams);
                 init();
             }
         };
