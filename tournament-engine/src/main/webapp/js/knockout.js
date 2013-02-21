@@ -147,7 +147,9 @@
         if (knockoutTournament){
             tournament.applyValues(knockoutTournament);
         } else {
-            tournament.createRandomTournament(this.title, teams);
+            if(teams){
+                tournament.createRandomTournament(this.title, teams);
+            }
         }
         
         return tournament;
@@ -468,9 +470,9 @@
             
             if(tournament.title !== ''){
                 addTitle();
+                
+                drawCanvasOutline();
             }
-            
-            drawCanvasOutline();
             
             paper.view.draw();
         };
@@ -719,7 +721,7 @@
     $.fn.knockout = function(tournamentOptions){
         var $matchFixtureContainer = $('<div/>', {'class':'match-fixture-container', 'hidden':'hidden'})
                                         .append(
-                                            $('<input/>', {'class':'fixture-date', 'placeholder':'Date', 'maxlength':'10'})
+                                            $('<input/>', {'class':'fixture-date', 'type':'text', 'placeholder':'Date', 'maxlength':'10'})
                                         ).append(
                                             $('<br/>')
                                         ).append(
@@ -734,11 +736,11 @@
                                         ).append(
                                             $('<br/>')
                                         ).append(
-                                            $('<input/>', {'class':'home-score', 'placeholder':'Home score'})
+                                            $('<input/>', {'class':'home-score', 'type':'text', 'placeholder':'Home score'})
                                         ).append(
                                             $('<br/>')
                                         ).append(
-                                            $('<input/>', {'class':'away-score', 'placeholder':'Away score'})
+                                            $('<input/>', {'class':'away-score', 'type':'text', 'placeholder':'Away score'})
                                         );
         
         var $matchDataContainer = $('<div/>', {'class':'match-data-container'})
