@@ -468,8 +468,10 @@
             
             setCanvasDimentions();
             
-            if(tournament.title !== ''){
-                addTitle();
+            if(tournament.names.length > 1){
+                if(tournament.title !== ''){
+                    addTitle();
+                }
                 
                 drawCanvasOutline();
             }
