@@ -1,31 +1,19 @@
 // jQuery Knockout Tournament plugin :)
 //
-// Version 2 22/02/2013-1
+// Version 3 22/02/2013-2
 
 ;(function($, paper){
     "use strict";
     
-    var listeners = {};
-    
-    var Events = function(id){
-        var listener = id && listeners[id];
-    
-        if(!listener){
-            var callbacks = $.Callbacks("unique");
-            
-            listener = {
-                subscribe : callbacks.add,
-                publish   : callbacks.fire
-            };
-            
-            if(id){
-                listeners[id] = listener;
+    var KnockoutEvent = function(){
+        return {
+            allowDefault   : true,
+            preventDefault : function(){
+                allowDefault = false;
             }
-        }
-        
-        return listener;
+        };
     };
-    
+
     var Utils = {
         applyValues : function(properties, target){
             if(properties){
@@ -513,9 +501,12 @@
             var position = getMatchFromEvent(event);
             
             if(position) {
-                if(listeners["editMatch"]) {
-                    Events("editMatch").publish(position);
-                } else {
+                var editMatchEvent = new KnockoutEvent();
+                editMatchEvent.position = position;
+                
+                $tournamentContainer.trigger("editMatch", editMatchEvent);
+                
+                if(editMatchEvent.allowDefault){
                     showMatchEditor(position);
                 }
             }
@@ -756,10 +747,9 @@
      *     
      *     To register a match edit listener (optional):
      *     
-     *     var knockout = $('#knockout-tournament').knockout({});
-     *     
-     *     knockout.Events("editMatch").subscribe(function(value){
-     *         alert("Selected match: " + value);
+     *     $('#knockout-tournament').on("editMatch", function(event, editMatchEvent){
+     *         alert("Selected match: " + editMatchEvent.position);
+     *         editMatchEvent.preventDefault(); // Prevents the plugin from showing its own UI
      *     });
      */
     $.fn.knockout = function(tournamentOptions){
@@ -804,8 +794,7 @@
         return {
                 redraw                 : knockout.redraw,
                 showTournament         : knockout.showTournament,
-                createRandomTournament : knockout.createRandomTournament,
-                Events                 : Events
+                createRandomTournament : knockout.createRandomTournament
          };
     };
 })(jQuery, paper);
