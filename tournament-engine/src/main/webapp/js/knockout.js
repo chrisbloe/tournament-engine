@@ -1,9 +1,30 @@
 // jQuery Knockout Tournament plugin :)
 //
-// Version 1 20/02/2013-1
+// Version 2 22/02/2013-1
 
 ;(function($, paper){
     "use strict";
+    
+    var listeners = {};
+    
+    var Events = function(id){
+        var listener = id && listeners[id];
+    
+        if(!listener){
+            var callbacks = $.Callbacks("unique");
+            
+            listener = {
+                subscribe : callbacks.add,
+                publish   : callbacks.fire
+            };
+            
+            if(id){
+                listeners[id] = listener;
+            }
+        }
+        
+        return listener;
+    };
     
     var Utils = {
         applyValues : function(properties, target){
@@ -360,10 +381,32 @@
                      .strokeColor = 'black';
         };
         
-        var showMatchEditor = function(event){
+        var showMatchEditor = function(position){
             $matchFixtureContainer.hide();
             $matchResultContainer.hide();
             
+            var team1 = tournament.names[position * 2];
+            var team2 = tournament.names[position * 2 + 1];
+
+            $matchDataContainer.dialog("open");
+
+            tournament.position = position;
+            $matchFixtureContainer.show();
+            $fixtureDate.val(tournament.fixtures[position][0]);
+            $fixtureTime.val(tournament.fixtures[position][1]);
+
+            if(team1 !== "" && team2 !== ""){
+                $winner.empty();
+                $winner.append(new Option("Winner", ""));
+                $winner.append(new Option(team1, team1));
+                $winner.append(new Option(team2, team2));
+                $homeScore.val(tournament.scores[position][0]);
+                $awayScore.val(tournament.scores[position][1]);
+                $matchResultContainer.show();
+            }
+        };
+
+        var getMatchFromEvent = function(event){
             var x = event.pageX - $canvas.offset().left;
             var y = event.pageY - $canvas.offset().top;
             
@@ -390,22 +433,7 @@
                             var team2 = tournament.names[j * 2 + 1];
                             
                             if(team1 !== "-" && team2 !== "-"){
-                                $matchDataContainer.dialog("open");
-                                
-                                tournament.position = j;
-                                $matchFixtureContainer.show();
-                                $fixtureDate.val(tournament.fixtures[j][0]);
-                                $fixtureTime.val(tournament.fixtures[j][1]);
-                                
-                                if(team1 !== "" && team2 !== ""){
-                                    $winner.empty();
-                                    $winner.append(new Option("Winner", ""));
-                                    $winner.append(new Option(team1, team1));
-                                    $winner.append(new Option(team2, team2));
-                                    $homeScore.val(tournament.scores[j][0]);
-                                    $awayScore.val(tournament.scores[j][1]);
-                                    $matchResultContainer.show();
-                                }
+                                return j;
                             }
                             
                             return;
@@ -482,7 +510,15 @@
         init();
         
         $canvas.mousedown(function(event){
-            showMatchEditor(event);
+            var position = getMatchFromEvent(event);
+            
+            if(position) {
+                if(listeners["editMatch"]) {
+                    Events("editMatch").publish(position);
+                } else {
+                    showMatchEditor(position);
+                }
+            }
         });
         
         $matchDataContainer.dialog({
@@ -690,8 +726,6 @@
      * @return
      *     {Knockout} The knockout object.
      *     
-     * @version 1 ~ 2013-02-07
-     *     
      * @example
      *     Creating a new random tournament from a group of teams:
      *     
@@ -718,6 +752,14 @@
      *             lineLength     : 0.2, // For far between the rounds the lines meet
      *             textSize       : 10,   // Font size
      *         }
+     *     });
+     *     
+     *     To register a match edit listener (optional):
+     *     
+     *     var knockout = $('#knockout-tournament').knockout({});
+     *     
+     *     knockout.Events("editMatch").subscribe(function(value){
+     *         alert("Selected match: " + value);
      *     });
      */
     $.fn.knockout = function(tournamentOptions){
@@ -762,7 +804,8 @@
         return {
                 redraw                 : knockout.redraw,
                 showTournament         : knockout.showTournament,
-                createRandomTournament : knockout.createRandomTournament
+                createRandomTournament : knockout.createRandomTournament,
+                Events                 : Events
          };
     };
 })(jQuery, paper);
