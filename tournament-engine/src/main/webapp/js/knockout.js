@@ -1,6 +1,6 @@
 // jQuery Knockout Tournament plugin :)
 //
-// Version 3 22/02/2013-2
+// Version 4 26/02/2013-1
 
 ;(function($, paper){
     "use strict";
@@ -9,7 +9,7 @@
         return {
             allowDefault   : true,
             preventDefault : function(){
-                allowDefault = false;
+                this.allowDefault = false;
             }
         };
     };
@@ -81,7 +81,8 @@
     var KnockoutTournament = function(teams, knockoutTournament){
         var tournament = {
             title       : "",
-            names       : [''],
+            teams       : teams,
+            schedule    : [''],
             locations   : [''],
             scores      : [['', '']],
             fixtures    : [['', '']],
@@ -98,13 +99,17 @@
             },
             
             addResult   : function(result){
-                this.names[this.position] = result.winner;
+                var winner = result.scores[0] !== "" && result.scores[1] !== ""
+                           ? result.winner
+                           : "";
+                
+                this.schedule[this.position] = winner;
                 this.scores[this.position][0] = result.scores[0];
                 this.scores[this.position][1] = result.scores[1];
             },
             
             reset       : function(){
-                this.names     = [''],
+                this.schedule     = [''],
                 this.locations = [''],
                 this.scores    = [['', '']],
                 this.fixtures  = [['', '']],
@@ -114,6 +119,7 @@
             
             createRandomTournament : function(title, teams){
                 this.title = title;
+                this.teams = teams;
                 
                 var maxDepth = Math.ceil((Math.log(teams.length))/(Math.log(2)));
                 
@@ -122,7 +128,7 @@
                 
                 // Set later rounds to blank
                 for(var position = 0; position < minPosition; position++){
-                    this.names[position] = '';
+                    this.schedule[position] = '';
                 }
                 
                 var firstRound = [];
@@ -141,7 +147,7 @@
                 
                 // Append the first round to the end of the earlier rounds
                 for(var k = minPosition; k <= maxPosition; k++){
-                    this.names.push(firstRound[k - minPosition]);
+                    this.schedule.push(firstRound[k - minPosition]);
                 }
                 
                 // Fill in the other parts
@@ -248,7 +254,7 @@
 
             var participant = new paper.PointText(new paper.Point(boxes[i].position.x, y));
             participant.justification = 'center';
-            participant.content = tournament.names[i];
+            participant.content = tournament.schedule[i];
             participant.characterStyle = { fontSize: displayOptions.textSize };
         };
 
@@ -317,16 +323,16 @@
         };
 
         var addByes = function(){
-            var maxDepth = Math.ceil((Math.log(tournament.names.length))/(Math.log(2)));
+            var maxDepth = Math.ceil((Math.log(tournament.schedule.length))/(Math.log(2)));
             var minPosition = Math.pow(2, maxDepth - 1);
             
             for(var i = minPosition - 1; i > 0; i--){
-                if(tournament.names[i * 2] === '-'){
-                    tournament.names[i] = tournament.names[i * 2 + 1];
+                if(tournament.schedule[i * 2] === '-'){
+                    tournament.schedule[i] = tournament.schedule[i * 2 + 1];
                     addText(i);
                 } else {
-                    if(tournament.names[i * 2 + 1] === '-'){
-                        tournament.names[i] = tournament.names[i * 2];
+                    if(tournament.schedule[i * 2 + 1] === '-'){
+                        tournament.schedule[i] = tournament.schedule[i * 2];
                         addText(i);
                     }
                 }
@@ -335,14 +341,14 @@
 
         var addSuccessColors = function(){
             for(var i = 1; i < Math.pow(2, depth); i++){
-                var winningTeam = tournament.names[i];
+                var winningTeam = tournament.schedule[i];
                 
                 if(winningTeam !== '' && winningTeam !== '-'){
-                    if(winningTeam === tournament.names[i * 2]){
+                    if(winningTeam === tournament.schedule[i * 2]){
                         boxes[i * 2].strokeColor = 'green';
                     }
 
-                    if(winningTeam === tournament.names[i * 2 + 1]){
+                    if(winningTeam === tournament.schedule[i * 2 + 1]){
                         boxes[i * 2 + 1].strokeColor = 'green';
                     }
                 }
@@ -373,8 +379,8 @@
             $matchFixtureContainer.hide();
             $matchResultContainer.hide();
             
-            var team1 = tournament.names[position * 2];
-            var team2 = tournament.names[position * 2 + 1];
+            var team1 = tournament.schedule[position * 2];
+            var team2 = tournament.schedule[position * 2 + 1];
 
             $matchDataContainer.dialog("open");
 
@@ -384,10 +390,12 @@
             $fixtureTime.val(tournament.fixtures[position][1]);
 
             if(team1 !== "" && team2 !== ""){
+                var currentWinner = tournament.schedule[position];
+                
                 $winner.empty();
-                $winner.append(new Option("Winner", ""));
-                $winner.append(new Option(team1, team1));
-                $winner.append(new Option(team2, team2));
+                $winner.append(new Option("Winner", "", true));
+                $winner.append(new Option(team1, team1, false, currentWinner === team1));
+                $winner.append(new Option(team2, team2, false, currentWinner === team2));
                 $homeScore.val(tournament.scores[position][0]);
                 $awayScore.val(tournament.scores[position][1]);
                 $matchResultContainer.show();
@@ -417,8 +425,8 @@
                         }
                         
                         if(box2Y + displayOptions.height / 2 > y){
-                            var team1 = tournament.names[j * 2];
-                            var team2 = tournament.names[j * 2 + 1];
+                            var team1 = tournament.schedule[j * 2];
+                            var team2 = tournament.schedule[j * 2 + 1];
                             
                             if(team1 !== "-" && team2 !== "-"){
                                 return j;
@@ -436,7 +444,7 @@
         var init = function(){
             paper.setup(canvas);
             
-            depth = Math.floor((Math.log(tournament.names.length - 1))/(Math.log(2)));
+            depth = Math.floor((Math.log(tournament.schedule.length - 1))/(Math.log(2)));
             startx = depth * (displayOptions.width + displayOptions.widthDistance) + displayOptions.border;
             starty = displayOptions.heightDistance * (Math.pow(2, depth) - 1) + displayOptions.border * 1.5;
             
@@ -484,7 +492,7 @@
             
             setCanvasDimentions();
             
-            if(tournament.names.length > 1){
+            if(tournament.schedule.length > 1){
                 if(tournament.title !== ''){
                     addTitle();
                 }
@@ -605,7 +613,7 @@
              * @example
              *     knockoutTournament : {
              *         title     : "This is my frikkin' awesome tournament 2!",
-             *         names     : ['', '', 'West Ham', 'Coventry', 'Man Utd', 'West Ham', 'Blackburn', 'Coventry', 'Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'],
+             *         schedule  : ['', '', 'West Ham', 'Coventry', 'Man Utd', 'West Ham', 'Blackburn', 'Coventry', 'Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'],
              *         locations : ['', 'Wembley', 'Old Trafford', 'Ewood Park', 'Galpharm Stadium', 'Upton Park', 'Globe Arena', 'Ricoh Arena'],
              *         scores    : [['', ''], ['', ''], ['1 (1)', '4 (3)'], ['0 (0)', '2 (2)'], ['0 (0)', '0* (0) [2-4]'], ['1* (0) [6-5]', '1 (1)'], ['4 (3)', '5 (4)'], ['4 (1)', '2 (0)']],
              *         fixtures  : [['', ''], ['18/10/2013', '15:00'], ['11/10/2013', '15:00'], ['', ''], ['', ''], ['', ''], ['', ''], ['', '']]
@@ -634,6 +642,7 @@
                 tournament.reset();
                 tournament.createRandomTournament(title, teams);
                 init();
+                return tournament;
             }
         };
     };
@@ -720,16 +729,16 @@
      * @example
      *     Creating a new random tournament from a group of teams:
      *     
-     *     $('#knockout-tournament').knockout({
+     *     $('#knockoutTournament').knockout({
      *         teams : ['Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool']
      *     });
      *     
      *     Showing an existing knockoutTournament:
      *     
-     *     $('#knockout-tournament').knockout({
+     *     $('#knockoutTournament').knockout({
      *         knockoutTournament : {
      *             title     : "This is my frikkin' awesome tournament 2!",
-     *             names     : ['', '', 'West Ham', 'Coventry', 'Man Utd', 'West Ham', 'Blackburn', 'Coventry', 'Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'],
+     *             schedule  : ['', '', 'West Ham', 'Coventry', 'Man Utd', 'West Ham', 'Blackburn', 'Coventry', 'Huddersfield', 'Man Utd', 'West Ham', 'Swindon', 'Morecambe', 'Blackburn', 'Coventry', 'Liverpool'],
      *             locations : ['', 'Wembley', 'Old Trafford', 'Ewood Park', 'Galpharm Stadium', 'Upton Park', 'Globe Arena', 'Ricoh Arena'],
      *             scores    : [['', ''], ['', ''], ['1 (1)', '4 (3)'], ['0 (0)', '2 (2)'], ['0 (0)', '0* (0) [2-4]'], ['1* (0) [6-5]', '1 (1)'], ['4 (3)', '5 (4)'], ['4 (1)', '2 (0)']],
      *             fixtures  : [['', ''], ['18/10/2013', '15:00'], ['11/10/2013', '15:00'], ['', ''], ['', ''], ['', ''], ['', ''], ['', '']]
@@ -738,7 +747,7 @@
      *     
      *     displayOptions edit the UI:
      *     
-     *     $('#knockout-tournament').knockout({
+     *     $('#knockoutTournament').knockout({
      *         displayOptions : {
      *             lineLength     : 0.2, // For far between the rounds the lines meet
      *             textSize       : 10,   // Font size
@@ -747,7 +756,7 @@
      *     
      *     To register a match edit listener (optional):
      *     
-     *     $('#knockout-tournament').on("editMatch", function(event, editMatchEvent){
+     *     $('#knockoutTournament').on("editMatch", function(event, editMatchEvent){
      *         alert("Selected match: " + editMatchEvent.position);
      *         editMatchEvent.preventDefault(); // Prevents the plugin from showing its own UI
      *     });
